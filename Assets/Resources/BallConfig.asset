@@ -1,0 +1,168 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfa3dfc8a94a7940933aecb182f3a81, type: 3}
+  m_Name: BallConfig
+  m_EditorClassIdentifier: 
+  Num_Radio_SpriteIndex:
+  - BallNum: 2
+    BallSize: 0.357
+    BallSpriteName: 10
+  - BallNum: 4
+    BallSize: 0.43272728
+    BallSpriteName: 14
+  - BallNum: 8
+    BallSize: 0.51927274
+    BallSpriteName: 5
+  - BallNum: 16
+    BallSize: 0.61663634
+    BallSpriteName: 6
+  - BallNum: 32
+    BallSize: 0.6490909
+    BallSpriteName: 3
+  - BallNum: 64
+    BallSize: 0.81136364
+    BallSpriteName: 7
+  - BallNum: 128
+    BallSize: 0.8870909
+    BallSpriteName: 8
+  - BallNum: 256
+    BallSize: 0.9736364
+    BallSpriteName: 15
+  - BallNum: 512
+    BallSize: 1.0493636
+    BallSpriteName: 11
+  - BallNum: 1024
+    BallSize: 1.19
+    BallSpriteName: 13
+  - BallNum: 2048
+    BallSize: 1.4225909
+    BallSpriteName: 16
+  Range_Num_Weight:
+  - realateRange: 4
+    ballRangeNum: 128
+    ballNumWeights:
+    - num: 2
+      weight: 100
+    - num: 4
+      weight: 100
+    - num: 8
+      weight: 80
+    - num: 16
+      weight: 20
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 256
+    ballNumWeights:
+    - num: 2
+      weight: 80
+    - num: 4
+      weight: 90
+    - num: 8
+      weight: 80
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 512
+    ballNumWeights:
+    - num: 2
+      weight: 30
+    - num: 4
+      weight: 70
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 100
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 1024
+    ballNumWeights:
+    - num: 2
+      weight: 50
+    - num: 4
+      weight: 50
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 100
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 2048
+    ballNumWeights:
+    - num: 2
+      weight: 70
+    - num: 4
+      weight: 80
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 40
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 4096
+    ballNumWeights:
+    - num: 2
+      weight: 50
+    - num: 4
+      weight: 80
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 10
+    - num: 128
+      weight: 0
+  - realateRange: 3
+    ballRangeNum: 8192
+    ballNumWeights:
+    - num: 2
+      weight: 60
+    - num: 4
+      weight: 60
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 10
+    - num: 128
+      weight: 10

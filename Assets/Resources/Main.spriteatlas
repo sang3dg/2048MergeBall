@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Main
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: dcf51dfc1efcd1f4bb85d9b1750f8ed8, type: 3}
+    totalSpriteSurfaceArea: 2277473
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 083b1de03048a8d459e5027144c6a29d, type: 3}
+  - {fileID: 21300000, guid: d9e2170120f68ab489216e24745b2e43, type: 3}
+  - {fileID: 21300000, guid: 46da2c32519fc754d9b561959c9585fc, type: 3}
+  - {fileID: 21300000, guid: 92918a521eca4df438aa3d1aa36ff02f, type: 3}
+  - {fileID: 21300000, guid: c2d32733761d62d46ab64bbf48ee470c, type: 3}
+  - {fileID: 21300000, guid: 715f2083e88c8be4397abdbd0ec54018, type: 3}
+  - {fileID: 21300000, guid: d619ba8408b4a674cae262adb1da3192, type: 3}
+  - {fileID: 21300000, guid: a31eb7a4ef90c9747ae73118f9afb30f, type: 3}
+  - {fileID: 21300000, guid: 4c7554f47edf01b4bab05bb33d2d8ead, type: 3}
+  - {fileID: 21300000, guid: 57fea60555771ed4bb4a585cebce4c47, type: 3}
+  - {fileID: 21300000, guid: 5b1ff625d245c0744ac0c09e728d47ef, type: 3}
+  - {fileID: 21300000, guid: b28919065c0a8ff4daa000788be18b6a, type: 3}
+  - {fileID: 21300000, guid: f0686d16a03f5a3469e9fcf4259ebf3a, type: 3}
+  - {fileID: 21300000, guid: 71502376ce55919409c441ba9c5f72eb, type: 3}
+  - {fileID: 21300000, guid: 60140f2714834cc44b26f307da8f3f41, type: 3}
+  - {fileID: 21300000, guid: accb4b093740cfc48b9d521310c787ab, type: 3}
+  - {fileID: 21300000, guid: 4d76f45a1ac6ddc4993662554443368e, type: 3}
+  - {fileID: 21300000, guid: 6d472ffac170f554d861a9004cf1f530, type: 3}
+  - {fileID: 21300000, guid: c0e1101b4d0210844a5392d226c82202, type: 3}
+  - {fileID: 21300000, guid: 1fb81d3b1ef1a4d4b97213fa24b90780, type: 3}
+  - {fileID: 21300000, guid: ebeb3f5bfdde06a44869cf4f2d910151, type: 3}
+  - {fileID: 21300000, guid: 337a0ccb545723247bc12816a26f721d, type: 3}
+  - {fileID: 21300000, guid: 250ededced93b9e45a322e4116bd0310, type: 3}
+  - {fileID: 21300000, guid: 41d429ec71080fe4bb08fe11ba3f49e3, type: 3}
+  - {fileID: 21300000, guid: 0c459bec964e3284ca9b1da3385b4b0c, type: 3}
+  - {fileID: 21300000, guid: 6d0cd2ed563169c40b71ed636f798363, type: 3}
+  - {fileID: 21300000, guid: fd1b0bbfee45b484db7baed1b2ce7027, type: 3}
+  - {fileID: 21300000, guid: 422d4dbf3b8d2a34a88d6607f50d4695, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - ad
+  - 11
+  - 7
+  - 5
+  - 3
+  - 9
+  - line
+  - 13
+  - 6
+  - setting
+  - 8
+  - progress
+  - 16
+  - Bubble
+  - home
+  - superball
+  - magnet
+  - 14
+  - wheel
+  - 10
+  - plane
+  - 2
+  - panel
+  - 15
+  - 4
+  - 1
+  - 12
+  - gold
+  m_Tag: Main
+  m_IsVariant: 0
