@@ -5,15 +5,19 @@ using UnityEditor;
 using System.IO;
 using Excel;
 using System.Data;
+using System;
 
 public class ReadExcel : Editor
 {
     [MenuItem("ReadConfigExcel/Read")]
     public static void ReadConfig()
     {
-        BallConfig _config = Resources.Load<BallConfig>("BallConfig");
-        _config.Num_Radio_SpriteIndex.Clear();
-        _config.Range_Num_Weight.Clear();
+        GameConfig _config = Resources.Load<GameConfig>("GameConfig");
+        _config.BallBaseDatas.Clear();
+        _config.BallSpawnDatas.Clear();
+        _config.StageScoreDatas.Clear();
+        _config.SlotsDatas.Clear();
+        _config.WheelDatas.Clear();
 
         string XlsxPath = Application.dataPath + "/2048.xlsx";
         if (!File.Exists(XlsxPath))
@@ -45,10 +49,10 @@ public class ReadExcel : Editor
                 BallSize = float.Parse(tempRow[1].ToString()),
                 BallSpriteName = int.Parse(tempRow[2].ToString())
             };
-            _config.Num_Radio_SpriteIndex.Add(configData);
+            _config.BallBaseDatas.Add(configData);
         }
         #endregion
-
+        #region 球的生成规则
         DataTable ballFallTable = dataSet.Tables[1];
         int rowCount1 = ballFallTable.Rows.Count;
         for(int rowIndex = 3; rowIndex < rowCount1; rowIndex++)
@@ -94,7 +98,66 @@ public class ReadExcel : Editor
                 ballNumWeights.Add(numWeight);
             }
             ballFallData.ballNumWeights = ballNumWeights;
-            _config.Range_Num_Weight.Add(ballFallData);
+            _config.BallSpawnDatas.Add(ballFallData);
+        }
+        #endregion
+        #region 关卡升级规则
+        DataTable stageScoreTable = dataSet.Tables[2];
+        int rowCount2 = stageScoreTable.Rows.Count;
+        for(int rowIndex = 1; rowIndex < rowCount2; rowIndex++)
+        {
+            var tempRow = stageScoreTable.Rows[rowIndex];
+            if (string.IsNullOrEmpty(tempRow[0].ToString()))
+                continue;
+            StageScoreData stageScoreData = new StageScoreData()
+            {
+                maxStage = int.Parse(tempRow[1].ToString()),
+                upgradeNeedScore = int.Parse(tempRow[2].ToString())
+            };
+            _config.StageScoreDatas.Add(stageScoreData);
+        }
+        #endregion
+        #region 老虎机奖励规则
+        DataTable slotsTable = dataSet.Tables[3];
+        int rowCount3 = slotsTable.Rows.Count;
+        for(int rowIndex = 1; rowIndex < rowCount3; rowIndex++)
+        {
+            var tempRow = slotsTable.Rows[rowIndex];
+            if (string.IsNullOrEmpty(tempRow[0].ToString()))
+                continue;
+            SlotsData slotsData = new SlotsData()
+            {
+                maxCash = int.Parse(tempRow[1].ToString()),
+                cashRange = new Vector2Int(int.Parse(tempRow[2].ToString()), int.Parse(tempRow[3].ToString())),
+                cashWeight = int.Parse(tempRow[4].ToString()),
+                coinRange = new Vector2Int(int.Parse(tempRow[5].ToString()), int.Parse(tempRow[6].ToString())),
+                coinWeight = int.Parse(tempRow[7].ToString())
+            };
+            _config.SlotsDatas.Add(slotsData);
+        }
+        #endregion
+
+        DataTable wheelTable = dataSet.Tables[4];
+        int rowCount4 = wheelTable.Rows.Count;
+        for(int rowIndex = 1; rowIndex < rowCount4; rowIndex++)
+        {
+            var tempRow = wheelTable.Rows[rowIndex];
+            if (string.IsNullOrEmpty(tempRow[0].ToString()))
+                continue;
+            WheelData wheelData = new WheelData()
+            {
+                type = (Reward)Enum.Parse(typeof(Reward), tempRow[0].ToString()),
+                num = int.Parse(tempRow[1].ToString()),
+                weight = int.Parse(tempRow[2].ToString()),
+                limitCash = int.Parse(tempRow[4].ToString())
+            };
+            wheelData.blackbox = new List<int>();
+            string[] blackBoxStr = tempRow[3].ToString().Split(',');
+            foreach(string index in blackBoxStr)
+            {
+                wheelData.blackbox.Add(int.Parse(index));
+            }
+            _config.WheelDatas.Add(wheelData);
         }
 
         EditorUtility.SetDirty(_config);

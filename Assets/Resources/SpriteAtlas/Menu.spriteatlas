@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Menu
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 3954a183102f06f469be04bbb7ed2e17, type: 3}
+    totalSpriteSurfaceArea: 656573
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e5837660f88cb504a9feb3a77c93cb33, type: 3}
+  - {fileID: 21300000, guid: a82aacd3c0b2a5f42b7df3d9d3a88bd5, type: 3}
+  - {fileID: 21300000, guid: 97ecc2e4236ac4e488a33028be2a862d, type: 3}
+  - {fileID: 21300000, guid: a80527c5641ec1f46ada0a36f91d014a, type: 3}
+  - {fileID: 21300000, guid: d62090361833fc445b3914b5461562c3, type: 3}
+  - {fileID: 21300000, guid: 43381bb7ade4c73419a69512f7070da6, type: 3}
+  - {fileID: 21300000, guid: 0ba3af280e53d5c4d8dbf96d9d3355f2, type: 3}
+  - {fileID: 21300000, guid: d78dcda8d64686741a8c407cbe1740c5, type: 3}
+  - {fileID: 21300000, guid: 16fb554b89367dd42b744692a33e11d5, type: 3}
+  - {fileID: 21300000, guid: 91704d2cb368cb9419a334f9f18c9cde, type: 3}
+  - {fileID: 21300000, guid: 0880b80e0fbebe642a7c5e50a7e8cc36, type: 3}
+  - {fileID: 21300000, guid: 14bfba9e1ce8361499dab862a9951b79, type: 3}
+  - {fileID: 21300000, guid: c21cb5de912c8aa4e9baac06cf532b33, type: 3}
+  - {fileID: 21300000, guid: 8ee6fefe31669df409084c71db08716b, type: 3}
+  - {fileID: 21300000, guid: 7346653f659f76a4d8f6422fc8039406, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - prop1
+  - cash
+  - tokenbg
+  - slotsBG
+  - adicon
+  - stagePorgressFill
+  - "\u692D\u57066"
+  - setting
+  - stage
+  - stagePorgressBg
+  - prop2
+  - slots
+  - coin
+  - propbg
+  - scoreBG
+  m_Tag: Menu
+  m_IsVariant: 0

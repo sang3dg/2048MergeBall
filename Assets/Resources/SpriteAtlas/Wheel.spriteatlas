@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Wheel
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: bbe76e21cefe93f499319c53014c3dad, type: 3}
+    totalSpriteSurfaceArea: 2850609
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: dd0d041027cdffa4a8d97bf536bb2274, type: 3}
+  - {fileID: 21300000, guid: 5b3d57a04f7853a4da7a3928163c1499, type: 3}
+  - {fileID: 21300000, guid: 5efe2032ee169154fbd856a235506b08, type: 3}
+  - {fileID: 21300000, guid: 0bf01f238130b23409d1e3d1366d09b7, type: 3}
+  - {fileID: 21300000, guid: 9737a176f5a9c3b4e8a9bba06c6b554f, type: 3}
+  - {fileID: 21300000, guid: 8aeef0d69a28cae4dbb123bcbd063af0, type: 3}
+  - {fileID: 21300000, guid: 547810272d1a4594497cd6e0e04a9522, type: 3}
+  - {fileID: 21300000, guid: 345f65e7c346ca64ebcec49f67afaffb, type: 3}
+  - {fileID: 21300000, guid: cd8c682aa84379240b27ef80bb5d59ae, type: 3}
+  - {fileID: 21300000, guid: 6c4f8e9e004baf94e9e8341997271bda, type: 3}
+  - {fileID: 21300000, guid: 1c702e1ff12cd7b4e87a280af8c46a68, type: 3}
+  - {fileID: 21300000, guid: 4ad9252f02fa46c42bb5527c3a98d30a, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - wheelbase
+  - ticketbg
+  - handle
+  - ad
+  - light
+  - close
+  - LUCKYWHEEL
+  - wheelrewards
+  - SPIN
+  - titlebg
+  - ticket
+  - button
+  m_Tag: Wheel
+  m_IsVariant: 0

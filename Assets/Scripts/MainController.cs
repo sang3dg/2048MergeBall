@@ -9,7 +9,6 @@ public class MainController : MonoBehaviour
 {
     public static MainController Instance;
     public GameObject prefab_ball;
-    public GameObject prefab_explosion;
     public float f_ballStartSpeed = 5;
     public RectTransform rect_ballStartPos;
     public RectTransform rect_ballPool;
@@ -29,6 +28,7 @@ public class MainController : MonoBehaviour
     private void Start()
     {
         SpawnNewBall();
+        LoadSaveData();
     }
     public void SpawnNewBall()
     {
@@ -97,6 +97,7 @@ public class MainController : MonoBehaviour
             return;
         if (go_currentBall is object)
         {
+            GameManager.Instance.AddBallFallNum();
             go_currentBall.GetComponent<Rigidbody2D>().isKinematic = false;
             go_currentBall.GetComponent<CircleCollider2D>().isTrigger = false;
             go_currentBall.GetComponent<Rigidbody2D>().velocity = new Vector3(0, -f_ballStartSpeed, 0);
@@ -143,5 +144,53 @@ public class MainController : MonoBehaviour
         yield return new WaitForSeconds(GameManager.checkFailDelayTime);
         if (CheckFail(false))
             Debug.LogError("Fail");
+    }
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus)
+        {
+            SaveData();
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        SaveData();
+    }
+    private void SaveData()
+    {
+        List<Vector2> ballPos = new List<Vector2>();
+        List<int> ballNum = new List<int>();
+        Ball[] allBall = rect_ballPool.GetComponentsInChildren<Ball>();
+        int count = allBall.Length;
+        for (int i = 0; i < count; i++)
+        {
+            if (allBall[i].GetComponent<Rigidbody2D>().isKinematic == true)
+                continue;
+            ballPos.Add(allBall[i].transform.localPosition);
+            ballNum.Add(allBall[i].Num);
+        }
+        GameManager.Instance.SaveBallData(ballPos, ballNum, go_currentBall.GetComponent<Ball>().Num);
+    }
+    private void LoadSaveData()
+    {
+        List<Vector2> ballPos;
+        List<int> ballNum;
+        int currentBallNum;
+        ballPos = GameManager.Instance.GetBallData(out ballNum,out currentBallNum);
+        if (currentBallNum != 0)
+        {
+            float halfCircle = GetBallCircleHalf(currentBallNum);
+            go_currentBall.transform.localPosition = new Vector3(0, -halfCircle);
+            go_currentBall.GetComponent<Ball>().InitBall(currentBallNum);
+            rect_line.localPosition = new Vector3(0, -2 * halfCircle);
+        }
+        int count = ballPos.Count;
+        for(int i = 0; i < count; i++)
+        {
+            GameObject newBall = Instantiate(prefab_ball, rect_ballPool);
+            newBall.transform.localPosition = ballPos[i];
+            newBall.GetComponent<Ball>().InitBall(ballNum[i]);
+            newBall.GetComponent<Ball>().hasSpawNew = true;
+        }
     }
 }

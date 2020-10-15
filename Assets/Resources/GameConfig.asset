@@ -1,0 +1,343 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfa3dfc8a94a7940933aecb182f3a81, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  BallBaseDatas:
+  - BallNum: 2
+    BallSize: 0.357
+    BallSpriteName: 10
+  - BallNum: 4
+    BallSize: 0.43272728
+    BallSpriteName: 14
+  - BallNum: 8
+    BallSize: 0.51927274
+    BallSpriteName: 5
+  - BallNum: 16
+    BallSize: 0.61663634
+    BallSpriteName: 6
+  - BallNum: 32
+    BallSize: 0.6490909
+    BallSpriteName: 3
+  - BallNum: 64
+    BallSize: 0.81136364
+    BallSpriteName: 7
+  - BallNum: 128
+    BallSize: 0.8870909
+    BallSpriteName: 8
+  - BallNum: 256
+    BallSize: 0.9736364
+    BallSpriteName: 15
+  - BallNum: 512
+    BallSize: 1.0493636
+    BallSpriteName: 11
+  - BallNum: 1024
+    BallSize: 1.19
+    BallSpriteName: 13
+  - BallNum: 2048
+    BallSize: 1.4225909
+    BallSpriteName: 16
+  BallSpawnDatas:
+  - realateRange: 4
+    ballRangeNum: 128
+    ballNumWeights:
+    - num: 2
+      weight: 100
+    - num: 4
+      weight: 100
+    - num: 8
+      weight: 80
+    - num: 16
+      weight: 20
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 256
+    ballNumWeights:
+    - num: 2
+      weight: 80
+    - num: 4
+      weight: 90
+    - num: 8
+      weight: 80
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 512
+    ballNumWeights:
+    - num: 2
+      weight: 30
+    - num: 4
+      weight: 70
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 100
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 1024
+    ballNumWeights:
+    - num: 2
+      weight: 50
+    - num: 4
+      weight: 50
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 100
+    - num: 32
+      weight: 0
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 2048
+    ballNumWeights:
+    - num: 2
+      weight: 70
+    - num: 4
+      weight: 80
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 40
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 0
+    - num: 128
+      weight: 0
+  - realateRange: 4
+    ballRangeNum: 4096
+    ballNumWeights:
+    - num: 2
+      weight: 50
+    - num: 4
+      weight: 80
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 10
+    - num: 128
+      weight: 0
+  - realateRange: 3
+    ballRangeNum: 8192
+    ballNumWeights:
+    - num: 2
+      weight: 60
+    - num: 4
+      weight: 60
+    - num: 8
+      weight: 100
+    - num: 16
+      weight: 50
+    - num: 32
+      weight: 10
+    - num: 64
+      weight: 10
+    - num: 128
+      weight: 10
+  StageScoreDatas:
+  - maxStage: 1
+    upgradeNeedScore: 200
+  - maxStage: 3
+    upgradeNeedScore: 500
+  - maxStage: 10
+    upgradeNeedScore: 1000
+  - maxStage: 20
+    upgradeNeedScore: 2000
+  - maxStage: 50
+    upgradeNeedScore: 3000
+  - maxStage: 999
+    upgradeNeedScore: 5000
+  SlotsDatas:
+  - maxCash: 1000
+    cashRange: {x: 1000, y: 1500}
+    cashWeight: 100
+    coinRange: {x: 150, y: 250}
+    coinWeight: 0
+  - maxCash: 2000
+    cashRange: {x: 500, y: 1000}
+    cashWeight: 100
+    coinRange: {x: 150, y: 250}
+    coinWeight: 0
+  - maxCash: 3000
+    cashRange: {x: 300, y: 500}
+    cashWeight: 100
+    coinRange: {x: 150, y: 250}
+    coinWeight: 0
+  - maxCash: 4000
+    cashRange: {x: 200, y: 400}
+    cashWeight: 80
+    coinRange: {x: 150, y: 250}
+    coinWeight: 0
+  - maxCash: 5000
+    cashRange: {x: 100, y: 120}
+    cashWeight: 80
+    coinRange: {x: 150, y: 250}
+    coinWeight: 15
+  - maxCash: 5500
+    cashRange: {x: 50, y: 70}
+    cashWeight: 80
+    coinRange: {x: 150, y: 250}
+    coinWeight: 15
+  - maxCash: 6000
+    cashRange: {x: 20, y: 50}
+    cashWeight: 80
+    coinRange: {x: 150, y: 250}
+    coinWeight: 15
+  - maxCash: 6500
+    cashRange: {x: 10, y: 20}
+    cashWeight: 50
+    coinRange: {x: 150, y: 250}
+    coinWeight: 40
+  - maxCash: 7000
+    cashRange: {x: 10, y: 10}
+    cashWeight: 50
+    coinRange: {x: 150, y: 250}
+    coinWeight: 40
+  - maxCash: 7500
+    cashRange: {x: 10, y: 10}
+    cashWeight: 50
+    coinRange: {x: 150, y: 250}
+    coinWeight: 40
+  - maxCash: 8000
+    cashRange: {x: 10, y: 10}
+    cashWeight: 30
+    coinRange: {x: 150, y: 250}
+    coinWeight: 50
+  - maxCash: 8200
+    cashRange: {x: 10, y: 10}
+    cashWeight: 30
+    coinRange: {x: 150, y: 250}
+    coinWeight: 50
+  - maxCash: 8400
+    cashRange: {x: 10, y: 10}
+    cashWeight: 30
+    coinRange: {x: 150, y: 250}
+    coinWeight: 50
+  - maxCash: 8600
+    cashRange: {x: 10, y: 10}
+    cashWeight: 10
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 8800
+    cashRange: {x: 10, y: 10}
+    cashWeight: 10
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 9000
+    cashRange: {x: 10, y: 10}
+    cashWeight: 10
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 9200
+    cashRange: {x: 10, y: 10}
+    cashWeight: 0
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 9400
+    cashRange: {x: 10, y: 10}
+    cashWeight: 0
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 9600
+    cashRange: {x: 10, y: 10}
+    cashWeight: 0
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  - maxCash: 10000
+    cashRange: {x: 10, y: 10}
+    cashWeight: 0
+    coinRange: {x: 150, y: 250}
+    coinWeight: 70
+  WheelDatas:
+  - type: 3
+    num: 1000
+    weight: 10
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 6
+    num: 2
+    weight: 100
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 4
+    num: 50
+    weight: 200
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 2
+    num: 2
+    weight: 40
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 3
+    num: 100
+    weight: 100
+    blackbox: 01000000040000000a000000
+    limitCash: 3000
+  - type: 1
+    num: 2
+    weight: 40
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 4
+    num: 100
+    weight: 200
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 3
+    num: 100000
+    weight: 0
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 1
+    num: 1
+    weight: 40
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 3
+    num: 10
+    weight: 100
+    blackbox: ffffffff
+    limitCash: 9600
+  - type: 4
+    num: 200
+    weight: 40
+    blackbox: ffffffff
+    limitCash: -1
+  - type: 2
+    num: 1
+    weight: 40
+    blackbox: ffffffff
+    limitCash: -1

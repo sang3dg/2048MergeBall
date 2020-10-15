@@ -55,13 +55,14 @@ public class Ball : MonoBehaviour
                         otherBall.willBeDestory = true;
                         MainController.Instance.RecycleBall(otherBall.gameObject);
                         isExplosion = true;
+                        go_explosion.SetActive(false);
                         go_explosion.SetActive(true);
                         InitBall(Num * 2);
+                        GameManager.Instance.AddScore(Num);
                         if (gameObject.activeSelf)
                             StartCoroutine("WaitForExplosion");
                         else
                         {
-                            go_explosion.SetActive(false);
                             isExplosion = false;
                         }
                     }
@@ -77,7 +78,6 @@ public class Ball : MonoBehaviour
     IEnumerator WaitForExplosion()
     {
         yield return new WaitForSeconds(GameManager.ballExplosionTime);
-        go_explosion.SetActive(false);
         isExplosion = false;
     }
 }

@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RewardNoCash
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 41d202cb6f77ebf4aa2bdb8f7d5298b9, type: 3}
+    totalSpriteSurfaceArea: 644644
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 09e27c614e9b00d4f92110d1cb85ee4d, type: 3}
+  - {fileID: 21300000, guid: ad01b0f165915ab42b3f4bb0b84280b7, type: 3}
+  - {fileID: 21300000, guid: 79062402b0e30ed44b5a565029e3db9a, type: 3}
+  - {fileID: 21300000, guid: 555922e28d5aa0d489fd25250f15ee99, type: 3}
+  - {fileID: 21300000, guid: fe74ed865f2432f449eb78c30c23e9df, type: 3}
+  - {fileID: 21300000, guid: 4b5636a6156a64d499a2f7a44f45fa98, type: 3}
+  - {fileID: 21300000, guid: d5b01627d6859514fa5703d7e4bda9f3, type: 3}
+  - {fileID: 21300000, guid: d2872bf82e0349948a0d02f4ab494cab, type: 3}
+  - {fileID: 21300000, guid: b65c8dfa6197ae1439b25a06d4ef562c, type: 3}
+  - {fileID: 21300000, guid: 4777eecb3c90bde489349d6a5ed0431e, type: 3}
+  - {fileID: 21300000, guid: 7c8e99dd75a783b4b928a7040888dabc, type: 3}
+  - {fileID: 21300000, guid: d3fe4bdefac8bbe43ac8a0b4d44075e0, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Coin
+  - base
+  - titlebg
+  - Prop1
+  - NoThanks-shen
+  - button
+  - WheelTicket
+  - title
+  - GETx2
+  - ad
+  - basein
+  - Prop2
+  m_Tag: RewardNoCash
+  m_IsVariant: 0
