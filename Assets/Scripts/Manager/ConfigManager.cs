@@ -4,12 +4,15 @@ using UnityEngine;
 public class ConfigManager
 {
     static GameConfig gameConfig = null;
-    public static BallBaseData GetBallBaseConfig(int num)
+    public ConfigManager()
     {
-        if(gameConfig is null)
+        if (gameConfig is null)
         {
             gameConfig = Resources.Load<GameConfig>("GameConfig");
         }
+    }
+    public static BallBaseData GetBallBaseConfig(int num)
+    {
         int count = gameConfig.BallBaseDatas.Count;
         for(int i = 0; i < count; i++)
         {
@@ -20,10 +23,6 @@ public class ConfigManager
     }
     public static BallSpawnData GetBallSpawnConfig(int maxNum)
     {
-        if (gameConfig is null)
-        {
-            gameConfig = Resources.Load<GameConfig>("GameConfig");
-        }
         List<BallSpawnData> ballSpawnDatas = gameConfig.BallSpawnDatas;
         int count = ballSpawnDatas.Count;
         for(int i = 0; i < count; i++)
@@ -56,12 +55,8 @@ public class ConfigManager
         Debug.LogError("Num is not in range." + maxNum);
         return default;
     }
-    public static StageScoreData GetStageScoreData(int currentStage)
+    public StageScoreData GetStageScoreData(int currentStage)
     {
-        if (gameConfig is null)
-        {
-            gameConfig = Resources.Load<GameConfig>("GameConfig");
-        }
         int count = gameConfig.StageScoreDatas.Count;
         for(int i = 0; i < count; i++)
         {
@@ -71,12 +66,8 @@ public class ConfigManager
         Debug.LogError("StageScore Data Out of range");
         return gameConfig.StageScoreDatas[count - 1];
     }
-    public static SlotsData GetSlotsData(int currentCash)
+    public SlotsData GetSlotsData(int currentCash)
     {
-        if (gameConfig is null)
-        {
-            gameConfig = Resources.Load<GameConfig>("GameConfig");
-        }
         int count = gameConfig.SlotsDatas.Count;
         for(int i = 0; i < count; i++)
         {
@@ -88,8 +79,28 @@ public class ConfigManager
         Debug.LogError("Slots Data Out of range");
         return gameConfig.SlotsDatas[count - 1];
     }
-    public static List<WheelData> GetWheelDatas()
+    public List<WheelData> GetWheelDatas()
     {
         return gameConfig.WheelDatas;
+    }
+    public GiftDataA GetGiftAData(int stage)
+    {
+        int count = gameConfig.GiftDataAs.Count;
+        for(int i = 0; i < count; i++)
+        {
+            if (stage < gameConfig.GiftDataAs[i].maxStage)
+                return gameConfig.GiftDataAs[i];
+        }
+        return gameConfig.GiftDataAs[count - 1];
+    }
+    public GiftDataB GetGiftBData(int cash)
+    {
+        int count = gameConfig.GiftDataBs.Count;
+        for(int i = 0; i < count; i++)
+        {
+            if (cash <= gameConfig.GiftDataBs[i].maxCash)
+                return gameConfig.GiftDataBs[i];
+        }
+        return gameConfig.GiftDataBs[count - 1];
     }
 }

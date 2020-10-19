@@ -18,6 +18,8 @@ public class ReadExcel : Editor
         _config.StageScoreDatas.Clear();
         _config.SlotsDatas.Clear();
         _config.WheelDatas.Clear();
+        _config.GiftDataAs.Clear();
+        _config.GiftDataBs.Clear();
 
         string XlsxPath = Application.dataPath + "/2048.xlsx";
         if (!File.Exists(XlsxPath))
@@ -136,7 +138,7 @@ public class ReadExcel : Editor
             _config.SlotsDatas.Add(slotsData);
         }
         #endregion
-
+        #region 转盘奖励规则
         DataTable wheelTable = dataSet.Tables[4];
         int rowCount4 = wheelTable.Rows.Count;
         for(int rowIndex = 1; rowIndex < rowCount4; rowIndex++)
@@ -158,6 +160,43 @@ public class ReadExcel : Editor
                 wheelData.blackbox.Add(int.Parse(index));
             }
             _config.WheelDatas.Add(wheelData);
+        }
+        #endregion
+        #region 礼盒A包生成及奖励规则
+        DataTable giftTableA = dataSet.Tables[5];
+        int rowCount5 = giftTableA.Rows.Count;
+        for(int rowIndex = 1; rowIndex < rowCount5; rowIndex++)
+        {
+            var tempRow = giftTableA.Rows[rowIndex];
+            if (string.IsNullOrEmpty(tempRow[0].ToString()))
+                continue;
+            GiftDataA giftDataA = new GiftDataA()
+            {
+                maxStage = int.Parse(tempRow[0].ToString()),
+                fallBallNumRange = new Vector2Int(int.Parse(tempRow[1].ToString()), int.Parse(tempRow[2].ToString())),
+                rewardCoinNumRange = new Vector2Int(int.Parse(tempRow[3].ToString()), int.Parse(tempRow[4].ToString()))
+            };
+            _config.GiftDataAs.Add(giftDataA);
+        }
+        #endregion
+
+        DataTable giftTableB = dataSet.Tables[6];
+        int rowCount6 = giftTableB.Rows.Count;
+        for(int rowIndex = 3; rowIndex < rowCount6; rowIndex++)
+        {
+            var tempRow = giftTableB.Rows[rowIndex];
+            if (string.IsNullOrEmpty(tempRow[0].ToString()))
+                continue;
+            GiftDataB giftDataB = new GiftDataB()
+            {
+                maxCash = int.Parse(tempRow[1].ToString()),
+                fallBallNumRange = new Vector2Int(int.Parse(tempRow[2].ToString()), int.Parse(tempRow[3].ToString())),
+                cashWeight = int.Parse(tempRow[4].ToString()),
+                coinWeight = int.Parse(tempRow[5].ToString()),
+                rewardCashNumRange = new Vector2Int(int.Parse(tempRow[6].ToString()), int.Parse(tempRow[7].ToString())),
+                rewardCoinNumRange = new Vector2Int(int.Parse(tempRow[8].ToString()), int.Parse(tempRow[8].ToString()))
+            };
+            _config.GiftDataBs.Add(giftDataB);
         }
 
         EditorUtility.SetDirty(_config);

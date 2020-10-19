@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -143,7 +144,9 @@ public class MainController : MonoBehaviour
     {
         yield return new WaitForSeconds(GameManager.checkFailDelayTime);
         if (CheckFail(false))
-            Debug.LogError("Fail");
+        {
+            GameManager.Instance.UIManager.ShowPopPanelByType(UI.UI_Panel.UI_PopPanel.GameOverPanel);
+        }
     }
     private void OnApplicationFocus(bool focus)
     {
@@ -191,6 +194,50 @@ public class MainController : MonoBehaviour
             newBall.transform.localPosition = ballPos[i];
             newBall.GetComponent<Ball>().InitBall(ballNum[i]);
             newBall.GetComponent<Ball>().hasSpawNew = true;
+        }
+        go_currentBall.transform.SetAsLastSibling();
+    }
+    public void OnContinueGame()
+    {
+        Ball[] allBall = rect_ballPool.GetComponentsInChildren<Ball>();
+        if (allBall.Length == 0) return;
+        int count = allBall.Length;
+        List<Ball> ballList = new List<Ball>();
+        for (int i = 0; i < count; i++)
+        {
+            if (allBall[i].GetComponent<Rigidbody2D>().isKinematic == true)
+                continue;
+            ballList.Add(allBall[i]);
+        }
+        ballList.Sort((a, b) =>
+        {
+            if (a.Num > b.Num) return 1;
+            else if (a.Num == b.Num) return 0;
+            else return -1;
+        });
+        int lastNum = ballList[0].Num;
+        int deleteTypeNum = 0;
+        for(int i = 0; i < count; i++)
+        {
+            if (ballList[i].Num != lastNum)
+            {
+                lastNum = ballList[i].Num;
+                deleteTypeNum++;
+            }
+            if (deleteTypeNum >= 3)
+                break;
+            Destroy(ballList[i].gameObject);
+        }
+    }
+    public void OnRestartGame()
+    {
+        Ball[] allBall = rect_ballPool.GetComponentsInChildren<Ball>();
+        int count = allBall.Length;
+        for (int i = 0; i < count; i++)
+        {
+            if (allBall[i].GetComponent<Rigidbody2D>().isKinematic == true)
+                continue;
+            Destroy(allBall[i].gameObject);
         }
     }
 }

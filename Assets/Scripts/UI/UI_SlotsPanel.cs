@@ -112,10 +112,9 @@ public class UI_SlotsPanel : UI_PopPanelBase
         }
 
         UIManager.ClosePopPanel(this);
-        if (reward > 0)
-            GameManager.ShowConfirmRewardNoCashPanel(Reward.Coin, reward);
-        else
-            GameManager.ShowConfirmRewardCashPanel(-reward);
+        Reward type = reward < 0 ? Reward.Cash : Reward.Coin;
+        reward = Mathf.Abs(reward);
+        GameManager.ShowConfirmRewardPanel(type, reward);
         isSpining = false;
     }
     static Vector2 noadSpincontentPos = new Vector2(0, 2.4f);

@@ -20,7 +20,15 @@ namespace UI
         public Text bestScoreText;
         public Text currentStageText;
         public Text nextStageText;
+        public Text prop1NumText;
+        public Text prop2NumText;
+        public Text prop1NeedNumText;
+        public Text prop2NeedNumText;
+        public Image prop1NeedIcon;
+        public Image prop2NeedIcon;
         public Image stageProgressFillImage;
+        Sprite adIcon;
+        Sprite coinIcon;
         protected override void Awake()
         {
             base.Awake();
@@ -31,6 +39,10 @@ namespace UI
             wheelButton.onClick.AddListener(OnWheelButtonClick);
             propButton1.onClick.AddListener(OnProp1ButtonClick);
             propButton2.onClick.AddListener(OnProp2ButtonClick);
+            currentProgress = FillStart;
+            stageProgressFillImage.fillAmount = FillStart;
+            adIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_ad");
+            coinIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_coin");
         }
         private void OnSettingButtonClick()
         {
@@ -50,11 +62,29 @@ namespace UI
         }
         private void OnProp1ButtonClick()
         {
-
+            if (hasProp1)
+            {
+                GameManager.AddPop1Num(-1);
+                RefreshProp1();
+            }
+            else
+            {
+                GameManager.WillBuyProp = Reward.Prop1;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+            }
         }
         private void OnProp2ButtonClick()
         {
-
+            if (hasProp2)
+            {
+                GameManager.AddPop2Num(-1);
+                RefreshProp2();
+            }
+            else
+            {
+                GameManager.WillBuyProp = Reward.Prop2;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+            }
         }
         public void RefreshCashText()
         {
@@ -73,17 +103,81 @@ namespace UI
         {
             bestScoreText.text = GameManager.GetBestScore().ToString();
         }
-        private void SetStageInfo()
+        public void SetStageInfo()
         {
             currentStageText.text = GameManager.GetStage().ToString();
             nextStageText.text = (GameManager.GetStage() + 1).ToString();
         }
-        const float FillStart = 0.326f;
-        const float FillEnd = 0.677f;
+        bool hasProp1 = false;
+        bool hasProp2 = false;
+        public void RefreshProp1()
+        {
+            int prop1Num = GameManager.GetProp1Num();
+            prop1NumText.text = "x" + prop1Num;
+            hasProp1 = prop1Num > 0;
+            if (prop1Num <= 0)
+            {
+                int needCoin = GameManager.GetProp1NeedCoinNum();
+                if (GameManager.GetCoin() >= needCoin)
+                {
+                    prop1NeedIcon.sprite = coinIcon;
+                    prop1NeedNumText.text = needCoin.ToString();
+                }
+                else
+                {
+                    prop1NeedIcon.sprite = adIcon;
+                    prop1NeedNumText.text = "FREE";
+                }
+                prop1NeedIcon.gameObject.SetActive(true);
+                prop1NeedNumText.gameObject.SetActive(true);
+            }
+            else
+            {
+                prop1NeedIcon.gameObject.SetActive(false);
+                prop1NeedNumText.gameObject.SetActive(false);
+            }
+        }
+        public void RefreshProp2()
+        {
+            int prop2Num = GameManager.GetProp2Num();
+            prop2NumText.text = "x" + prop2Num;
+            hasProp2 = prop2Num > 0;
+            if (prop2Num <= 0)
+            {
+                int needCoin = GameManager.GetProp2NeedCoinNum();
+                if (GameManager.GetCoin() >= needCoin)
+                {
+                    prop2NeedIcon.sprite = coinIcon;
+                    prop2NeedNumText.text = needCoin.ToString();
+                }
+                else
+                {
+                    prop2NeedIcon.sprite = adIcon;
+                    prop2NeedNumText.text = "FREE";
+                }
+                prop2NeedIcon.gameObject.SetActive(true);
+                prop2NeedNumText.gameObject.SetActive(true);
+            }
+            else
+            {
+                prop2NeedIcon.gameObject.SetActive(false);
+                prop2NeedNumText.gameObject.SetActive(false);
+            }
+        }
+        const float FillStart = 0.33f;
+        const float FillEnd = 0.673f;
         const float FillLength = FillEnd - FillStart;
         public void RefreshStageProgress()
         {
             targetProgress = FillStart + FillLength * (1f * GameManager.GetScore() / GameManager.UpgradeNeedScore);
+        }
+        public void ResetStageProgress()
+        {
+            StopCoroutine("StageProgressAnimation");
+            stageProgressFillImage.fillAmount = 0;
+            currentProgress = 0;
+            targetProgress = 0;
+            StartCoroutine("StageProgressAnimation");
         }
         const float ProgressAnimationSpeed = 0.1f;
         private float targetProgress = 0;
@@ -92,7 +186,7 @@ namespace UI
         {
             while (true)
             {
-                if (Mathf.Abs(targetProgress - currentProgress) > 0.04f)
+                if (Mathf.Abs(targetProgress - currentProgress) > 0.01f)
                 {
                     float delta = Mathf.Clamp(Time.unscaledDeltaTime, 0, 0.04f) * ProgressAnimationSpeed;
                     currentProgress += delta;
@@ -116,8 +210,10 @@ namespace UI
             RefreshCoinText();
             RefreshScoreText();
             RefreshBestScoreText();
+            RefreshProp1();
+            RefreshProp2();
             SetStageInfo();
-            StartCoroutine(StageProgressAnimation());
+            StartCoroutine("StageProgressAnimation");
             yield return null;
         }
         protected override IEnumerator Close()

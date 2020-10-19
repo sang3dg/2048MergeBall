@@ -21,6 +21,8 @@ public class PlayerDataManager
                     amazon = 0,
                     prop1Num = 0,
                     prop2Num = 0,
+                    prop1NeedCoinNum = GameManager.originPropNeedCoinNum,
+                    prop2NeedCoinNum = GameManager.originPropNeedCoinNum,
                     wheelTicket = GameManager.startWheelTicket,
                     todayCanGetCashTime = GameManager.canGetCashTimesPerDay,
                     lastGetCashTime = DateTime.Now.ToString(),
@@ -107,6 +109,14 @@ public class PlayerDataManager
     public int GetPop2Num()
     {
         return playerData.prop2Num;
+    }
+    public int GetProp1NeedCoinNum()
+    {
+        return playerData.prop1NeedCoinNum;
+    }
+    public int GetProp2NeedCoinNum()
+    {
+        return playerData.prop2NeedCoinNum;
     }
     public bool GetTodayHasFreeWheel()
     {
@@ -204,6 +214,16 @@ public class PlayerDataManager
         Save();
         return playerData.prop2Num;
     }
+    public void SetProp1NeedCoinNum(int value)
+    {
+        playerData.prop1NeedCoinNum = value;
+        Save();
+    }
+    public void SetProp2NeedCoinNum(int value)
+    {
+        playerData.prop2NeedCoinNum = value;
+        Save();
+    }
     public int ReduceTodayCanGetCashTime(int value = -1)
     {
         playerData.todayCanGetCashTime += value;
@@ -232,6 +252,11 @@ public class PlayerDataManager
         Save();
         return playerData.fallBallNum;
     }
+    public void ClearFallBallNum()
+    {
+        playerData.fallBallNum = 0;
+        Save();
+    }
     public void SaveBallData(List<Vector2> ballPos,List<int> ballNum,int currentBallNum)
     {
         playerData.ballPos = ballPos;
@@ -255,6 +280,8 @@ public class PlayerData
     public int amazon;
     public int prop1Num;
     public int prop2Num;
+    public int prop1NeedCoinNum;
+    public int prop2NeedCoinNum;
     public int wheelTicket;
     public int todayCanGetCashTime;
     public string lastGetCashTime;

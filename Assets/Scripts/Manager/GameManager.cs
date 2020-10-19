@@ -12,18 +12,38 @@ public class GameManager : MonoBehaviour
     public const float checkFailDelayTime = 4f;
     public const int canGetCashTimesPerDay = 30;
     public const int startWheelTicket = 10;
+    public const int originPropNeedCoinNum = 300;
+    public const int propNeedCoinNumIncreaseStep = 50;
+    public const int propNeedMaxCoinNum = 1000;
+    public static bool isLoadingEnd = false;
+    public AnimationCurve PopPanelScaleAnimation;
+    public AnimationCurve PopPanelAlphaAnimation;
     public UIManager UIManager;
     public RectTransform popUIRootRect;
+    public RectTransform menuRootRect;
     private PlayerDataManager PlayerDataManager = null;
+    private ConfigManager ConfigManager = null;
+    [System.NonSerialized]
     public int UpgradeNeedScore = 0;
+    [System.NonSerialized]
+    public Reward WillBuyProp = Reward.Null;
     private void Awake()
     {
         Instance = this;
         UIManager = gameObject.AddComponent<UIManager>();
-        UIManager.Init(popUIRootRect, this);
+        UIManager.Init(popUIRootRect, menuRootRect, this);
         PlayerDataManager = new PlayerDataManager();
+        ConfigManager = new ConfigManager();
         UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.LoadingPanel);
         RefreshUpgradeNeedScore();
+    }
+    public bool GetIsPackB()
+    {
+        return PlayerDataManager.GetIsPackB();
+    }
+    public void SetIsPackB()
+    {
+        PlayerDataManager.SetIsPackB();
     }
     public int GetCurrentStageUpgradeNeedScore(int currentStage)
     {
@@ -74,13 +94,21 @@ public class GameManager : MonoBehaviour
     {
         return PlayerDataManager.GetAmazon();
     }
-    public int GetPop1Num()
+    public int GetProp1Num()
     {
         return PlayerDataManager.GetPop1Num();
     }
-    public int GetPop2Num()
+    public int GetProp2Num()
     {
         return PlayerDataManager.GetPop2Num();
+    }
+    public int GetProp1NeedCoinNum()
+    {
+        return PlayerDataManager.GetProp1NeedCoinNum();
+    }
+    public int GetProp2NeedCoinNum()
+    {
+        return PlayerDataManager.GetProp2NeedCoinNum();
     }
     public int GetTodayCanGetCashTime()
     {
@@ -105,6 +133,8 @@ public class GameManager : MonoBehaviour
         if (_MenuPanel != null)
         {
             _MenuPanel.RefreshCoinText();
+            _MenuPanel.RefreshProp1();
+            _MenuPanel.RefreshProp2();
         }
         return endValue;
     }
@@ -130,11 +160,23 @@ public class GameManager : MonoBehaviour
     }
     public int AddPop1Num(int value)
     {
-        return PlayerDataManager.AddPop1Num(value);
+        int currentPropNum = PlayerDataManager.AddPop1Num(value);
+        UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+        if (_MenuPanel != null)
+        {
+            _MenuPanel.RefreshProp1();
+        }
+        return currentPropNum;
     }
     public int AddPop2Num(int value)
     {
-        return PlayerDataManager.AddPop2Num(value);
+        int currentPropNum = PlayerDataManager.AddPop2Num(value);
+        UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+        if (_MenuPanel != null)
+        {
+            _MenuPanel.RefreshProp2();
+        }
+        return currentPropNum;
     }
     public int AddWheelTicket(int value)
     {
@@ -143,6 +185,29 @@ public class GameManager : MonoBehaviour
     public int AddBallFallNum(int value = 1)
     {
         return PlayerDataManager.AddFallBallNum(value);
+    }
+    public int UseProp1ByCoin()
+    {
+        int nextNeedCoin = GetProp1NeedCoinNum() + propNeedCoinNumIncreaseStep;
+        nextNeedCoin = Mathf.Clamp(nextNeedCoin, 0, propNeedMaxCoinNum);
+        PlayerDataManager.SetProp1NeedCoinNum(nextNeedCoin);
+        return nextNeedCoin;
+    }
+    public int UseProp2ByCoin()
+    {
+        int nextNeedCoin = GetProp2NeedCoinNum() + propNeedCoinNumIncreaseStep;
+        nextNeedCoin = Mathf.Clamp(nextNeedCoin, 0, propNeedMaxCoinNum);
+        PlayerDataManager.SetProp2NeedCoinNum(nextNeedCoin);
+        return nextNeedCoin;
+    }
+    public void ResetPropNeedCoinNum()
+    {
+        PlayerDataManager.SetProp1NeedCoinNum(originPropNeedCoinNum);
+        PlayerDataManager.SetProp2NeedCoinNum(originPropNeedCoinNum);
+    }
+    public void ClearBallFallNum()
+    {
+        PlayerDataManager.ClearFallBallNum();
     }
     public int ReduceTodayCanGetCashTime(int value = -1)
     {
@@ -159,19 +224,13 @@ public class GameManager : MonoBehaviour
         else
             return Random.Range(slotsData.coinRange.x, slotsData.coinRange.y);
     }
-    public Reward WillReward_NoCashType = Reward.Null;
-    public int WillReward_NoCashNum = 0;
-    public void ShowConfirmRewardNoCashPanel(Reward type,int num)
+    public Reward ConfirmReward_Type = Reward.Null;
+    public int ConfirmRewrad_Num = 0;
+    public void ShowConfirmRewardPanel(Reward type, int num)
     {
-        WillReward_NoCashType = type;
-        WillReward_NoCashNum = num;
-        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.RewardNoCashPanel);
-    }
-    public int WillReward_CashNum = 0;
-    public void ShowConfirmRewardCashPanel(int num)
-    {
-        WillReward_CashNum = num;
-        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.RewardCashPanel);
+        ConfirmReward_Type = type;
+        ConfirmRewrad_Num = num;
+        UIManager.ShowPopPanelByType(type == Reward.Cash ? UI_Panel.UI_PopPanel.RewardCashPanel : UI_Panel.UI_PopPanel.RewardNoCashPanel);
     }
     private struct WheelRandom
     {
@@ -226,6 +285,70 @@ public class GameManager : MonoBehaviour
     public List<Vector2> GetBallData(out List<int> ballNum,out int currentBallNum)
     {
         return PlayerDataManager.GetBallData(out ballNum, out currentBallNum);
+    }
+    public int RandomGiftNeedFallBall()
+    {
+        ClearBallFallNum();
+        bool isPackB = GetIsPackB();
+        if (isPackB)
+        {
+            GiftDataB giftDataB = ConfigManager.GetGiftBData(GetCash());
+            return Random.Range(giftDataB.fallBallNumRange.x, giftDataB.fallBallNumRange.y);
+        }
+        else
+        {
+            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetStage());
+            return Random.Range(giftDataA.fallBallNumRange.x, giftDataA.fallBallNumRange.y);
+        }
+    }
+    public Reward RandomGiftReward(out int rewardNum)
+    {
+        bool isPackB = GetIsPackB();
+        if (isPackB)
+        {
+            GiftDataB giftDataB = ConfigManager.GetGiftBData(GetCash());
+            if (GetTodayCanGetCashTime() <= 0)
+            {
+                rewardNum = Random.Range(giftDataB.rewardCoinNumRange.x, giftDataB.rewardCoinNumRange.y);
+                return Reward.Coin;
+            }
+            int total = giftDataB.cashWeight + giftDataB.coinWeight;
+            int result = Random.Range(0, total);
+            if (result < giftDataB.cashWeight)
+            {
+                rewardNum = Random.Range(giftDataB.rewardCashNumRange.x, giftDataB.rewardCashNumRange.y);
+                return Reward.Cash;
+            }
+            else
+            {
+                rewardNum = Random.Range(giftDataB.rewardCoinNumRange.x, giftDataB.rewardCoinNumRange.y);
+                return Reward.Coin;
+            }
+        }
+        else
+        {
+            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetStage());
+            rewardNum = Random.Range(giftDataA.rewardCoinNumRange.x, giftDataA.rewardCoinNumRange.y);
+            return Reward.Coin;
+        }
+    }
+    public void ContinueGame()
+    {
+        MainController.Instance.OnContinueGame();
+    }
+    public void RestartGame()
+    {
+        MainController.Instance.OnRestartGame();
+        PlayerDataManager.SetScore(0);
+        PlayerDataManager.SetStage(0);
+        RefreshUpgradeNeedScore();
+        UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+        if (_MenuPanel != null)
+        {
+            _MenuPanel.RefreshScoreText();
+            _MenuPanel.ResetStageProgress();
+            _MenuPanel.SetStageInfo();
+        }
     }
 }
 public enum Reward

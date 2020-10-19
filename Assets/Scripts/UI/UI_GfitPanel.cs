@@ -17,5 +17,10 @@ namespace UI
             base.Awake();
             PanelType = UI_Panel.UI_PopPanel.GiftPanel;
         }
+        private void OnOpenClick()
+        {
+            Reward type = GameManager.RandomGiftReward(out int num);
+            GameManager.ShowConfirmRewardPanel(type, num);
+        }
     }
 }

@@ -341,3 +341,134 @@ MonoBehaviour:
     weight: 40
     blackbox: ffffffff
     limitCash: -1
+  GiftDataAs:
+  - maxStage: 3
+    fallBallNumRange: {x: 3, y: 3}
+    rewardGoldNumRange: {x: 200, y: 250}
+  - maxStage: 10
+    fallBallNumRange: {x: 3, y: 10}
+    rewardGoldNumRange: {x: 150, y: 200}
+  - maxStage: 9999
+    fallBallNumRange: {x: 30, y: 30}
+    rewardGoldNumRange: {x: 50, y: 100}
+  GiftDataBs:
+  - maxCash: 1000
+    fallBallNumRange: {x: 10, y: 10}
+    cashWeight: 100
+    coinWeight: 0
+    rewardCashNumRange: {x: 1000, y: 1500}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 2000
+    fallBallNumRange: {x: 20, y: 20}
+    cashWeight: 100
+    coinWeight: 0
+    rewardCashNumRange: {x: 500, y: 1000}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 3000
+    fallBallNumRange: {x: 20, y: 20}
+    cashWeight: 100
+    coinWeight: 0
+    rewardCashNumRange: {x: 100, y: 150}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 4000
+    fallBallNumRange: {x: 20, y: 20}
+    cashWeight: 80
+    coinWeight: 0
+    rewardCashNumRange: {x: 100, y: 120}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 5000
+    fallBallNumRange: {x: 30, y: 30}
+    cashWeight: 80
+    coinWeight: 15
+    rewardCashNumRange: {x: 100, y: 120}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 5500
+    fallBallNumRange: {x: 30, y: 30}
+    cashWeight: 80
+    coinWeight: 15
+    rewardCashNumRange: {x: 50, y: 70}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 6000
+    fallBallNumRange: {x: 30, y: 30}
+    cashWeight: 80
+    coinWeight: 15
+    rewardCashNumRange: {x: 20, y: 50}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 6500
+    fallBallNumRange: {x: 30, y: 30}
+    cashWeight: 50
+    coinWeight: 40
+    rewardCashNumRange: {x: 10, y: 20}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 7000
+    fallBallNumRange: {x: 50, y: 50}
+    cashWeight: 50
+    coinWeight: 40
+    rewardCashNumRange: {x: 10, y: 15}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 7500
+    fallBallNumRange: {x: 50, y: 50}
+    cashWeight: 50
+    coinWeight: 40
+    rewardCashNumRange: {x: 5, y: 8}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 8000
+    fallBallNumRange: {x: 100, y: 100}
+    cashWeight: 30
+    coinWeight: 50
+    rewardCashNumRange: {x: 3, y: 5}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 8200
+    fallBallNumRange: {x: 200, y: 200}
+    cashWeight: 30
+    coinWeight: 50
+    rewardCashNumRange: {x: 1, y: 3}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 8400
+    fallBallNumRange: {x: 200, y: 200}
+    cashWeight: 30
+    coinWeight: 50
+    rewardCashNumRange: {x: 1, y: 3}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 8600
+    fallBallNumRange: {x: 200, y: 200}
+    cashWeight: 10
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 3}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 8800
+    fallBallNumRange: {x: 200, y: 200}
+    cashWeight: 10
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 3}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 9000
+    fallBallNumRange: {x: 500, y: 500}
+    cashWeight: 10
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 3}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 9200
+    fallBallNumRange: {x: 500, y: 500}
+    cashWeight: 5
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 2}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 9400
+    fallBallNumRange: {x: 1000, y: 1000}
+    cashWeight: 5
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 2}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 9600
+    fallBallNumRange: {x: 1000, y: 1000}
+    cashWeight: 0
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 2}
+    rewardGoldNumRange: {x: 150, y: 150}
+  - maxCash: 10000
+    fallBallNumRange: {x: 9999999, y: 9999999}
+    cashWeight: 0
+    coinWeight: 70
+    rewardCashNumRange: {x: 1, y: 1}
+    rewardGoldNumRange: {x: 150, y: 150}

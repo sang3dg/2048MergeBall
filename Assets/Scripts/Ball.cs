@@ -12,6 +12,8 @@ public class Ball : MonoBehaviour
     public RectTransform rect_text;
     public GameObject go_explosion;
     [NonSerialized]
+    public BallType Type = BallType.Normal;
+    [NonSerialized]
     public int Num;
     [NonSerialized]
     public bool hasSpawNew = false;
@@ -80,4 +82,10 @@ public class Ball : MonoBehaviour
         yield return new WaitForSeconds(GameManager.ballExplosionTime);
         isExplosion = false;
     }
+}
+public enum BallType
+{
+    Normal,
+    Prop1,
+    Prop2,
 }

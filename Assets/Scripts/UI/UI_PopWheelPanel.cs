@@ -55,13 +55,13 @@ namespace UI
         private void OnSpinClick()
         {
             if (isSpining) return;
-            if (GameManager.GetWheelTicket() <= 0) return;
             if (hasFree)
             {
                 Debug.Log("免费转动转盘");
             }
             else
             {
+                if (GameManager.GetWheelTicket() <= 0) return;
                 Debug.Log("观看广告转动转盘");
             }
             isSpining = true;
@@ -93,27 +93,7 @@ namespace UI
             {
                 yield return null;
             }
-            switch (rewardTypes[endIndex])
-            {
-                case Reward.Prop1:
-                    GameManager.ShowConfirmRewardNoCashPanel(rewardTypes[endIndex], rewardNums[endIndex]);
-                    break;
-                case Reward.Prop2:
-                    GameManager.ShowConfirmRewardNoCashPanel(rewardTypes[endIndex], rewardNums[endIndex]);
-                    break;
-                case Reward.Cash:
-                    GameManager.ShowConfirmRewardCashPanel(rewardNums[endIndex]);
-                    break;
-                case Reward.Coin:
-                    GameManager.ShowConfirmRewardNoCashPanel(rewardTypes[endIndex], rewardNums[endIndex]);
-                    break;
-                case Reward.WheelTicket:
-                    GameManager.ShowConfirmRewardNoCashPanel(rewardTypes[endIndex], rewardNums[endIndex]);
-                    break;
-                default:
-                    Debug.LogError("转盘奖励错误！");
-                    break;
-            }
+            GameManager.ShowConfirmRewardPanel(rewardTypes[endIndex], rewardNums[endIndex]);
             if (hasFree)
                 GameManager.UseFreeWheel();
             CheckHasFree();

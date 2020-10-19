@@ -32,7 +32,12 @@ namespace UI
         int rewardNum = 0;
         protected override void OnStartShow()
         {
-            rewardNum = GameManager.WillReward_CashNum;
+            if (GameManager.ConfirmReward_Type != Reward.Cash)
+            {
+                Debug.LogError("奖励类型错误");
+                return;
+            }
+            rewardNum = GameManager.ConfirmRewrad_Num;
             rewardNumText.text = "$" + ToolManager.GetCashShowString(rewardNum);
             remainingTimes.text = "Remaining:" + GameManager.ReduceTodayCanGetCashTime();
         }

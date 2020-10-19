@@ -11,6 +11,8 @@ public class GameConfig : ScriptableObject
     public List<StageScoreData> StageScoreDatas = new List<StageScoreData>();
     public List<SlotsData> SlotsDatas = new List<SlotsData>();
     public List<WheelData> WheelDatas = new List<WheelData>();
+    public List<GiftDataA> GiftDataAs = new List<GiftDataA>();
+    public List<GiftDataB> GiftDataBs = new List<GiftDataB>();
 }
 [System.Serializable]
 public struct BallBaseData
@@ -69,7 +71,7 @@ public struct GiftDataA
 {
     public int maxStage;
     public Vector2Int fallBallNumRange;
-    public Vector2Int rewardGoldNumRange;
+    public Vector2Int rewardCoinNumRange;
 }
 [System.Serializable]
 public struct GiftDataB
@@ -79,5 +81,5 @@ public struct GiftDataB
     public int cashWeight;
     public int coinWeight;
     public Vector2Int rewardCashNumRange;
-    public Vector2Int rewardGoldNumRange;
+    public Vector2Int rewardCoinNumRange;
 }

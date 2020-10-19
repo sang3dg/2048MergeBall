@@ -34,10 +34,10 @@ namespace UI
         int num = 0;
         protected override void OnStartShow()
         {
-            type = GameManager.WillReward_NoCashType;
-            num = GameManager.WillReward_NoCashNum;
-            rewardIcon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.RewardNoCash, GameManager.WillReward_NoCashType.ToString());
-            rewardNum.text = "x" + GameManager.WillReward_NoCashNum;
+            type = GameManager.ConfirmReward_Type;
+            num = GameManager.ConfirmRewrad_Num;
+            rewardIcon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.RewardNoCash, type.ToString());
+            rewardNum.text = "x" + num;
         }
         private void GetReward()
         {

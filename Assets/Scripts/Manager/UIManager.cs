@@ -18,6 +18,8 @@ namespace UI
             { UI_Panel.UI_PopPanel.RewardCashPanel , "Pop RewardCash Panel" },
             { UI_Panel.UI_PopPanel.WheelPanel , "Pop Wheel Panel" },
             { UI_Panel.UI_PopPanel.GiftPanel , "Pop Gift Panel" },
+            { UI_Panel.UI_PopPanel.BuyPropPanel , "Pop BuyProp Panel" },
+            { UI_Panel.UI_PopPanel.GameOverPanel , "Pop GameOver Panel" },
             {UI_Panel.MenuPanel,"Menu Panel" },
         };
         static readonly Dictionary<int, GameObject> UI_Type_Prefab_Dic = new Dictionary<int, GameObject>();
@@ -26,9 +28,11 @@ namespace UI
         static readonly Stack<UI_PanelBase> UI_PopPanel_Stack = new Stack<UI_PanelBase>();
         static GameManager GameManager;
         private RectTransform popRoot;
-        public void Init(RectTransform popRoot,GameManager gameManager)
+        private RectTransform menuRoot;
+        public void Init(RectTransform popRoot,RectTransform menuRoot, GameManager gameManager)
         {
             this.popRoot = popRoot;
+            this.menuRoot = menuRoot;
             GameManager = gameManager;
             UI_PanelBase.UIManager = this;
             UI_PanelBase.GameManager = gameManager;
@@ -159,6 +163,8 @@ namespace UI
                                 {
                                     UI_Type_Prefab_Dic.Add(panelType, prefab);
                                     UI_PanelBase panel = Instantiate(UI_Type_Prefab_Dic[panelType], popRoot).GetComponent<UI_PanelBase>();
+                                    if (panel is UI_MenuPanel)
+                                        panel.transform.SetParent(menuRoot);
                                     panel.transform.SetAsLastSibling();
                                     yield return panel.ShowThisPanel();
                                     UI_Type_Loaded_Dic[panelType].Add(panel);
@@ -310,7 +316,9 @@ namespace UI
             public const int RewardCashPanel = 5;
             public const int WheelPanel = 6;
             public const int GiftPanel = 7;
-            public const int PopPanelNum = 7;
+            public const int BuyPropPanel = 8;
+            public const int GameOverPanel = 9;
+            public const int PopPanelNum = 9;
         }
     }
 }

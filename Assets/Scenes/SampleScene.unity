@@ -300,13 +300,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 633a8e8d102d29e408a62bbea47e5afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManager: {fileID: 0}
+  PopPanelScaleAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8655764
+      inSlope: 0.20174704
+      outSlope: 0.20174704
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.06257982
+    - serializedVersion: 3
+      time: 0.08350706
+      value: 1.0380518
+      inSlope: 1.8956001
+      outSlope: 0.0057448177
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.059948947
+      outWeight: 0.81034654
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  PopPanelAlphaAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   popUIRootRect: {fileID: 1304897480}
-  UpgradeNeedScore: 0
+  menuRootRect: {fileID: 2073341049}
   nextSlotsIsUpgradeSlots: 0
-  WillReward_NoCashType: 0
-  WillReward_NoCashNum: 0
-  WillReward_CashNum: 0
+  ConfirmReward_Type: 0
+  ConfirmRewrad_Num: 0
 --- !u!1 &681660583
 GameObject:
   m_ObjectHideFlags: 0
