@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Rateus
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: c09771f44c6eebf44ac47d801e1b1724, type: 3}
+    totalSpriteSurfaceArea: 719311
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a736d73395458b6479b07c28766f8af4, type: 3}
+  - {fileID: 21300000, guid: 0f134a94b5c94cc4b9dab98b120db543, type: 3}
+  - {fileID: 21300000, guid: a02603f4b0e84e1489897a41eb30a8e3, type: 3}
+  - {fileID: 21300000, guid: 6eee0ae5392f9874f9398f3154bd97a5, type: 3}
+  - {fileID: 21300000, guid: a0c82ff6e335d804788547b19084725b, type: 3}
+  - {fileID: 21300000, guid: f3396f8b5ed7d8747b73bd212a910a31, type: 3}
+  - {fileID: 21300000, guid: 578fd1cbb24ff4d4091719296ba7e828, type: 3}
+  - {fileID: 21300000, guid: 0b3399cd297fb894dac55519e9716b9b, type: 3}
+  - {fileID: 21300000, guid: 6e4c8bed081ab6243ad2f0c4f1e6d169, type: 3}
+  - {fileID: 21300000, guid: e77f40be18eedb04498c8b6ffc4f73c7, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - stars
+  - grey
+  - base
+  - 5STARS
+  - titlebg
+  - 1-4STARS
+  - green
+  - RATEUS
+  - basein
+  - Supportusbyrating5STARS
+  m_Tag: Rateus
+  m_IsVariant: 0

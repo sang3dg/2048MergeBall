@@ -565,6 +565,8 @@ MonoBehaviour:
   getButton: {fileID: 8563611669945909831}
   rewardNumText: {fileID: 154046337521264236}
   remainingTimes: {fileID: 4005410471021520152}
+  adicon: {fileID: 6901027128162999563}
+  getContentRect: {fileID: 1434426546415022838}
 --- !u!1 &1970340913563595326
 GameObject:
   m_ObjectHideFlags: 0

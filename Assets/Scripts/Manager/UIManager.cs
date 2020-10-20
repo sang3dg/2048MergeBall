@@ -20,6 +20,7 @@ namespace UI
             { UI_Panel.UI_PopPanel.GiftPanel , "Pop Gift Panel" },
             { UI_Panel.UI_PopPanel.BuyPropPanel , "Pop BuyProp Panel" },
             { UI_Panel.UI_PopPanel.GameOverPanel , "Pop GameOver Panel" },
+            { UI_Panel.UI_PopPanel.RateusPanel , "Pop Rateus Panel" },
             {UI_Panel.MenuPanel,"Menu Panel" },
         };
         static readonly Dictionary<int, GameObject> UI_Type_Prefab_Dic = new Dictionary<int, GameObject>();
@@ -300,7 +301,7 @@ namespace UI
                 Debug.LogWarning("没有显示该面板!");
             }
             else
-                Debug.LogError("没有加载该面板!");
+                Debug.LogWarning("没有加载该面板!");
             return null;
         }
     }
@@ -318,7 +319,8 @@ namespace UI
             public const int GiftPanel = 7;
             public const int BuyPropPanel = 8;
             public const int GameOverPanel = 9;
-            public const int PopPanelNum = 9;
+            public const int RateusPanel = 10;
+            public const int PopPanelNum = 10;
         }
     }
 }

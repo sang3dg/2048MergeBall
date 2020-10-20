@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GamePanel
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 8cfc020b548508f40b72ba84ab0cbb93, type: 3}
+    totalSpriteSurfaceArea: 3437010
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 1256851086769c7479befbfda8640c1f, type: 3}
+  - {fileID: 21300000, guid: 5b761ad3cb13eab4a9d600bc6c87f0c5, type: 3}
+  - {fileID: 21300000, guid: ce1b8eb428aeb9c4c9c3ca3b3b9f0e49, type: 3}
+  - {fileID: 21300000, guid: 49ed4f1500ed382479a5f5f9c3179496, type: 3}
+  - {fileID: 21300000, guid: 0ed77b868c4ea2d4f97c6365ea9a0e2e, type: 3}
+  - {fileID: 21300000, guid: 585554a67806f2b48a2ac135bbf43d08, type: 3}
+  - {fileID: 21300000, guid: 52ca70684de8da248931e19ce90a8707, type: 3}
+  - {fileID: 21300000, guid: bc0c506ba47764f468af4c6ee593b0e7, type: 3}
+  - {fileID: 21300000, guid: 190d820d725bae640bda8e4d829e8398, type: 3}
+  - {fileID: 21300000, guid: 40bb0e1dcd0cef5428db32dfa53487a1, type: 3}
+  - {fileID: 21300000, guid: 9c1d2f3dd0a708849b2a4cb07755f37f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - lock_L
+  - base
+  - 8
+  - BG
+  - lock_R
+  - 9
+  - 7
+  - down
+  - 6
+  - lock
+  - 10
+  m_Tag: GamePanel
+  m_IsVariant: 0

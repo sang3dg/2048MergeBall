@@ -207,7 +207,7 @@ MonoBehaviour:
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   disableColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   handle: {fileID: 8611534819595316657}
-  handleMoveSpeed: 5
+  handleMoveSpeed: 10
   handleMoveType: 1
   handleHorizontalMoveDirection: 0
   handleVerticalMoveDirection: 0
@@ -506,7 +506,7 @@ MonoBehaviour:
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   disableColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   handle: {fileID: 8611534818071197111}
-  handleMoveSpeed: 5
+  handleMoveSpeed: 10
   handleMoveType: 1
   handleHorizontalMoveDirection: 0
   handleVerticalMoveDirection: 1

@@ -27,6 +27,11 @@ namespace UI
         public Image prop1NeedIcon;
         public Image prop2NeedIcon;
         public Image stageProgressFillImage;
+        [Space(15)]
+        public Button guideMaskButton;
+        public CanvasGroup guideCG;
+        public Image guideCard;
+        public Image guideHandle;
         Sprite adIcon;
         Sprite coinIcon;
         protected override void Awake()
@@ -39,51 +44,78 @@ namespace UI
             wheelButton.onClick.AddListener(OnWheelButtonClick);
             propButton1.onClick.AddListener(OnProp1ButtonClick);
             propButton2.onClick.AddListener(OnProp2ButtonClick);
-            currentProgress = FillStart;
+            guideMaskButton.onClick.AddListener(OnGuideBGClick);
+            currentProgress = Mathf.Floor(GameManager.CurrentLevelProgress);
             stageProgressFillImage.fillAmount = FillStart;
             adIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_ad");
             coinIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_coin");
         }
         private void OnSettingButtonClick()
         {
+            GameManager.PlayButtonClickSound();
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SettingPanel);
         }
         private void OnCashButtonClick()
         {
-
+            GameManager.PlayButtonClickSound();
+            if (isWaitingGuide)
+                return;
+            if (isGuiding)
+                OnGuideBGClick();
         }
         private void OnCoinButtonClick()
         {
-
+            GameManager.PlayButtonClickSound();
         }
         private void OnWheelButtonClick()
         {
+            GameManager.PlayButtonClickSound();
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.WheelPanel);
         }
         private void OnProp1ButtonClick()
         {
+            GameManager.PlayButtonClickSound();
             if (hasProp1)
             {
                 GameManager.AddPop1Num(-1);
-                RefreshProp1();
+                GameManager.UseProp1();
             }
             else
             {
-                GameManager.WillBuyProp = Reward.Prop1;
-                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+                int needCoin = GameManager.GetProp1NeedCoinNum();
+                if (GameManager.GetCoin() >= needCoin)
+                {
+                    GameManager.WillBuyProp = Reward.Prop1;
+                    UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+                }
+                else
+                {
+                    Debug.Log("观看广告获得道具1");
+                    GameManager.AddPop1Num(1);
+                }
             }
         }
         private void OnProp2ButtonClick()
         {
+            GameManager.PlayButtonClickSound();
             if (hasProp2)
             {
-                GameManager.AddPop2Num(-1);
-                RefreshProp2();
+                if(GameManager.UseProp2())
+                    GameManager.AddPop2Num(-1);
             }
             else
             {
-                GameManager.WillBuyProp = Reward.Prop2;
-                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+                int needCoin = GameManager.GetProp2NeedCoinNum();
+                if (GameManager.GetCoin() >= needCoin)
+                {
+                    GameManager.WillBuyProp = Reward.Prop2;
+                    UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.BuyPropPanel);
+                }
+                else
+                {
+                    Debug.Log("观看广告获得道具2");
+                    GameManager.AddPop2Num(1);
+                }
             }
         }
         public void RefreshCashText()
@@ -105,8 +137,8 @@ namespace UI
         }
         public void SetStageInfo()
         {
-            currentStageText.text = GameManager.GetStage().ToString();
-            nextStageText.text = (GameManager.GetStage() + 1).ToString();
+            currentStageText.text = GameManager.GetLevel().ToString();
+            nextStageText.text = (GameManager.GetLevel() + 1).ToString();
         }
         bool hasProp1 = false;
         bool hasProp2 = false;
@@ -169,35 +201,36 @@ namespace UI
         const float FillLength = FillEnd - FillStart;
         public void RefreshStageProgress()
         {
-            targetProgress = FillStart + FillLength * (1f * GameManager.GetScore() / GameManager.UpgradeNeedScore);
+            targetProgress = GameManager.CurrentLevelProgress;
         }
         public void ResetStageProgress()
         {
             StopCoroutine("StageProgressAnimation");
-            stageProgressFillImage.fillAmount = 0;
+            stageProgressFillImage.fillAmount = FillStart;
             currentProgress = 0;
             targetProgress = 0;
             StartCoroutine("StageProgressAnimation");
         }
-        const float ProgressAnimationSpeed = 0.1f;
+        const float ProgressAnimationSpeed = 1f;
         private float targetProgress = 0;
         private float currentProgress = 0;
         private IEnumerator StageProgressAnimation()
         {
             while (true)
             {
-                if (Mathf.Abs(targetProgress - currentProgress) > 0.01f)
+                if (currentProgress<targetProgress)
                 {
                     float delta = Mathf.Clamp(Time.unscaledDeltaTime, 0, 0.04f) * ProgressAnimationSpeed;
                     currentProgress += delta;
-                    if (currentProgress >= FillEnd)
+                    float nextFillAmount = FillStart + FillLength*(currentProgress - Mathf.Floor(currentProgress));
+                    if (stageProgressFillImage.fillAmount > nextFillAmount)
                     {
-                        currentProgress = FillStart;
                         GameManager.nextSlotsIsUpgradeSlots = true;
                         UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SlotsPanel);
                         SetStageInfo();
+                        GameManager.Instance.SpawnAGiftBall();
                     }
-                    stageProgressFillImage.fillAmount = currentProgress;
+                    stageProgressFillImage.fillAmount = nextFillAmount;
                 }
                 yield return null;
             }
@@ -221,6 +254,33 @@ namespace UI
             _CanvasGroup.alpha = 0;
             _CanvasGroup.blocksRaycasts = false;
             yield return null;
+        }
+        bool isGuiding = false;
+        bool isWaitingGuide = false;
+        public void ShowGuideCash()
+        {
+            StartCoroutine("ShowGuideDelayHide");
+        }
+        private IEnumerator ShowGuideDelayHide()
+        {
+            isGuiding = true;
+            isWaitingGuide = true;
+            guideCG.transform.SetAsLastSibling();
+            cashButton.transform.SetAsLastSibling();
+            guideHandle.transform.position = new Vector3(cashButton.transform.position.x, guideHandle.transform.position.y, guideHandle.transform.position.z);
+            guideCG.alpha = 1;
+            guideCG.blocksRaycasts = true;
+            guideCard.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "guide1");
+            guideHandle.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "guideHandle1");
+            yield return new WaitForSeconds(1);
+            isWaitingGuide = false;
+        }
+        private void OnGuideBGClick()
+        {
+            if (isWaitingGuide) return;
+            guideCG.alpha = 0;
+            guideCG.blocksRaycasts = false;
+            isGuiding = false;
         }
     }
 }

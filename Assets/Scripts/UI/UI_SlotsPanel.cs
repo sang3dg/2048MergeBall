@@ -36,6 +36,7 @@ public class UI_SlotsPanel : UI_PopPanelBase
     }
     private void OnCloseClick()
     {
+        GameManager.PlayButtonClickSound();
         if (isSpining) return;
         UIManager.ClosePopPanel(this);
     }
@@ -44,6 +45,7 @@ public class UI_SlotsPanel : UI_PopPanelBase
     bool isSpining = false;
     private void OnSpinClick()
     {
+        GameManager.PlayButtonClickSound();
         if (isSpining) return;
         isSpining = true;
         if (needAd)
@@ -80,6 +82,7 @@ public class UI_SlotsPanel : UI_PopPanelBase
         material_L.SetTextureOffset(ShaderProperty, offset);
         material_M.SetTextureOffset(ShaderProperty, offset);
         material_R.SetTextureOffset(ShaderProperty, offset);
+        AudioSource tempAs = GameManager.PlaySpinSound();
         while (timer < SpinTime)
         {
             yield return null;
@@ -91,6 +94,7 @@ public class UI_SlotsPanel : UI_PopPanelBase
             material_M.SetTextureOffset(ShaderProperty, offset);
             material_R.SetTextureOffset(ShaderProperty, offset);
         }
+        tempAs.Stop();
         currentOffset = endOffset + 0.03f;
         offset = new Vector2(0, currentOffset);
         material_L.SetTextureOffset(ShaderProperty, offset);

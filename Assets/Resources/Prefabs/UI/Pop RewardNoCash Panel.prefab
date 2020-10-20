@@ -709,6 +709,8 @@ MonoBehaviour:
   rewardNum: {fileID: 1724823451779213777}
   adButton: {fileID: 1197750399337842839}
   nothanksButton: {fileID: 856370290598973906}
+  adicon: {fileID: 6647872083036956979}
+  adContentRect: {fileID: 3156870186063884415}
 --- !u!1 &6647872083036956979
 GameObject:
   m_ObjectHideFlags: 0

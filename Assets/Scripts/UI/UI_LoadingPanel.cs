@@ -39,6 +39,7 @@ namespace UI
             UIManager.ClosePopPanelByID(UI_ID);
             UIManager.ReleasePanel(this);
             UIManager.ShowPopPanelByType(UI_Panel.MenuPanel);
+            GameManager.Instance.WhenLoadingGameEnd();
         }
         IEnumerator WaitFor()
         {

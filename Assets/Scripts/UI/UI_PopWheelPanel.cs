@@ -54,6 +54,7 @@ namespace UI
         bool isSpining = false;
         private void OnSpinClick()
         {
+            GameManager.PlayButtonClickSound();
             if (isSpining) return;
             if (hasFree)
             {
@@ -76,6 +77,7 @@ namespace UI
             if (endEularAngle == 360)
                 endEularAngle = 0;
             float rotateTimer = 0;
+            AudioSource tempAs = GameManager.PlaySpinSound();
             while (rotateTimer <= rotateTime)
             {
                 float deltaTime = Mathf.Clamp(Time.unscaledDeltaTime, 0, 0.04f);
@@ -83,6 +85,7 @@ namespace UI
                 rotateTimer += deltaTime;
                 yield return null;
             }
+            tempAs.Stop();
             wheelRect.localEulerAngles = new Vector3(0, 0, (endEularAngle - 5+360) % 360);
             for (int i = 0; i < 7; i++)
             {
@@ -103,6 +106,7 @@ namespace UI
         }
         private void OnCloseClick()
         {
+            GameManager.PlayButtonClickSound();
             if (isSpining) return;
             UIManager.ClosePopPanel(this);
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerDataManager
 {
-    static PlayerData playerData = null;
+    public PlayerData playerData = null;
     public PlayerDataManager()
     {
         if (playerData is null)
@@ -31,10 +31,18 @@ public class PlayerDataManager
                     fallBallNum = 0,
                     score = 0,
                     bestScore = 0,
-                    stage = 0,
+                    level = 0,
                     currentBallNum = 0,
                     ballPos = new List<Vector2>(),
-                    ballNum = new List<int>()
+                    ballNum = new List<int>(),
+                    targetLevelBallNum = GameManager.levelStartTargetBallNum,
+                    isFirstPlay = true,
+                    hasRateus = false,
+                    hasGuideCash = false,
+                    hasGetFreeGift = false,
+                    hasGuideGame = false,
+                    musicOn = true,
+                    soundOn = true
                 };
                 Save();
             }
@@ -64,13 +72,15 @@ public class PlayerDataManager
         Save();
         return isBest;
     }
-    public void SetStage(int value)
+    public void SetLevel(int value)
     {
-        playerData.stage = value;
+        playerData.level = value;
         Save();
     }
-    private void Save()
+    public void Save()
     {
+        if (!GameManager.isLoadingEnd) return;
+        if (AnimationAutoEnd.IsAnimation) return;
         PlayerPrefs.SetString("playerData", JsonUtility.ToJson(playerData));
         PlayerPrefs.Save();
     }
@@ -82,9 +92,9 @@ public class PlayerDataManager
     {
         return playerData.bestScore;
     }
-    public int GetStage()
+    public int GetLevel()
     {
-        return playerData.stage;
+        return playerData.level;
     }
     public int CurrentBallNum()
     {
@@ -179,6 +189,10 @@ public class PlayerDataManager
     {
         return playerData.fallBallNum;
     }
+    public int GetLevelTargetBallNum()
+    {
+        return playerData.targetLevelBallNum;
+    }
     public int AddCoin(int value)
     {
         playerData.coin += value;
@@ -252,6 +266,17 @@ public class PlayerDataManager
         Save();
         return playerData.fallBallNum;
     }
+    public int AddLevelTargetBallNum()
+    {
+        playerData.targetLevelBallNum *= 2;
+        Save();
+        return playerData.targetLevelBallNum;
+    }
+    public void ReSetLevelTargetBallNum()
+    {
+        playerData.targetLevelBallNum = GameManager.levelStartTargetBallNum;
+        Save();
+    }
     public void ClearFallBallNum()
     {
         playerData.fallBallNum = 0;
@@ -269,6 +294,33 @@ public class PlayerDataManager
         ballNum = playerData.ballNum;
         currentBallNum = playerData.currentBallNum;
         return playerData.ballPos;
+    }
+    public bool GetWhetherFirstPlay()
+    {
+        return playerData.isFirstPlay;
+    }
+    public void SetFirstPlayFalse()
+    {
+        playerData.isFirstPlay = false;
+        Save();
+    }
+    public bool GetWhetherRateus()
+    {
+        return playerData.hasRateus;
+    }
+    public void SetHasRateus()
+    {
+        playerData.hasRateus = true;
+        Save();
+    }
+    public bool GetWhetherGuideCash()
+    {
+        return playerData.hasGuideCash;
+    }
+    public void SetHasGuideCash()
+    {
+        playerData.hasGuideCash = true;
+        Save();
     }
 }
 [System.Serializable]
@@ -290,8 +342,16 @@ public class PlayerData
     public int fallBallNum;
     public int score;
     public int bestScore;
-    public int stage;
+    public int level;
     public int currentBallNum;
     public List<Vector2> ballPos;
     public List<int> ballNum;
+    public int targetLevelBallNum;
+    public bool isFirstPlay;
+    public bool hasRateus;
+    public bool hasGuideCash;
+    public bool hasGetFreeGift;
+    public bool hasGuideGame;
+    public bool musicOn;
+    public bool soundOn;
 }

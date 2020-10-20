@@ -22,19 +22,29 @@ namespace UI
         }
         private void OnSoundSwitch(bool isOn)
         {
-            Debug.Log("Sound " + (isOn ? "On" : "Off"));
+            GameManager.PlayButtonClickSound();
+            GameManager.SetSaveSoundState(isOn);
         }
         private void OnMusicSwitch(bool isOn)
         {
-            Debug.Log("Music " + (isOn ? "On" : "Off"));
+            GameManager.PlayButtonClickSound();
+            GameManager.SetSaveMusicState(isOn);
         }
         private void OnCloseClick()
         {
+            GameManager.PlayButtonClickSound();
             UIManager.ClosePopPanel(this);
         }
         private void OnRestartClick()
         {
-
+            GameManager.PlayButtonClickSound();
+            GameManager.RestartGame();
+            UIManager.ClosePopPanel(this);
+        }
+        protected override void OnStartShow()
+        {
+            soundSwitch.IsOn = GameManager.GetSoundOn();
+            musicSwitch.IsOn = GameManager.GetMusicOn();
         }
     }
 }

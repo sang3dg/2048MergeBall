@@ -15,30 +15,46 @@ public class GameManager : MonoBehaviour
     public const int originPropNeedCoinNum = 300;
     public const int propNeedCoinNumIncreaseStep = 50;
     public const int propNeedMaxCoinNum = 1000;
+    public const int levelStartTargetBallNum = 128;
     public static bool isLoadingEnd = false;
     public AnimationCurve PopPanelScaleAnimation;
     public AnimationCurve PopPanelAlphaAnimation;
-    public UIManager UIManager;
     public RectTransform popUIRootRect;
     public RectTransform menuRootRect;
+    public GameObject audioRoot;
+
+    [System.NonSerialized]
+    public UIManager UIManager;
     private PlayerDataManager PlayerDataManager = null;
     private ConfigManager ConfigManager = null;
+    private LevelManager LevelManager = null;
+    private AudioManager AudioManager = null;
     [System.NonSerialized]
     public int UpgradeNeedScore = 0;
+    [System.NonSerialized]
+    public float CurrentLevelProgress = 0;
     [System.NonSerialized]
     public Reward WillBuyProp = Reward.Null;
     private void Awake()
     {
         Instance = this;
+        isLoadingEnd = false;
         UIManager = gameObject.AddComponent<UIManager>();
+        LevelManager = gameObject.GetComponent<LevelManager>();
         UIManager.Init(popUIRootRect, menuRootRect, this);
+
         PlayerDataManager = new PlayerDataManager();
         ConfigManager = new ConfigManager();
+        AudioManager = new AudioManager(audioRoot);
+
         UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.LoadingPanel);
         RefreshUpgradeNeedScore();
+        CurrentLevelProgress = GetLevel() + GetScore() / (UpgradeNeedScore * 1f);
+        LevelManager.SetTargetBallNum(PlayerDataManager.GetLevelTargetBallNum());
     }
     public bool GetIsPackB()
     {
+        return true;
         return PlayerDataManager.GetIsPackB();
     }
     public void SetIsPackB()
@@ -52,12 +68,18 @@ public class GameManager : MonoBehaviour
     public void AddScore(int value)
     {
         bool isBest = PlayerDataManager.SetScore(GetScore() + value);
+        if (!GetWhetherRateus() && GetScore() >= 1000)
+        {
+            SetHasRateus();
+            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.RateusPanel);
+        }
         if (GetScore() >= UpgradeNeedScore)
         {
             PlayerDataManager.SetScore(0);
-            PlayerDataManager.SetStage(GetStage() + 1);
+            PlayerDataManager.SetLevel(GetLevel() + 1);
             RefreshUpgradeNeedScore();
         }
+        CurrentLevelProgress = GetLevel() + GetScore() / (UpgradeNeedScore * 1f);
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
@@ -74,13 +96,13 @@ public class GameManager : MonoBehaviour
     {
         return PlayerDataManager.GetBestScore();
     }
-    public int GetStage()
+    public int GetLevel()
     {
-        return PlayerDataManager.GetStage();
+        return PlayerDataManager.GetLevel();
     }
     private void RefreshUpgradeNeedScore()
     {
-        UpgradeNeedScore = ConfigManager.GetStageScoreData(GetStage()).upgradeNeedScore;
+        UpgradeNeedScore = ConfigManager.GetStageScoreData(GetLevel()).upgradeNeedScore;
     }
     public int GetCoin()
     {
@@ -126,6 +148,19 @@ public class GameManager : MonoBehaviour
     {
         PlayerDataManager.UseFreeWheel();
     }
+    public int GetTargetLevelBallNum()
+    {
+        return PlayerDataManager.GetLevelTargetBallNum();
+    }
+    public void LevelUp()
+    {
+        LevelManager.WhenLevelUp();
+        PlayerDataManager.AddLevelTargetBallNum();
+    }
+    public void RefreshTargetBallNum()
+    {
+        LevelManager.SetTargetBallNum(PlayerDataManager.GetLevelTargetBallNum());
+    }
     public int AddCoin(int value)
     {
         int endValue= PlayerDataManager.AddCoin(value);
@@ -145,6 +180,16 @@ public class GameManager : MonoBehaviour
         if (_MenuPanel != null)
         {
             _MenuPanel.RefreshCashText();
+            if (!PlayerDataManager.GetWhetherGuideCash())
+            {
+                PlayerDataManager.SetHasGuideCash();
+                UI_PanelBase wheelPanel = UIManager.GetUIPanel(UI_Panel.UI_PopPanel.WheelPanel);
+                if (wheelPanel != null)
+                {
+                    UIManager.ClosePopPanel(wheelPanel);
+                }
+                _MenuPanel.ShowGuideCash();
+            }
         }
         return endValue;
     }
@@ -184,16 +229,33 @@ public class GameManager : MonoBehaviour
     }
     public int AddBallFallNum(int value = 1)
     {
-        return PlayerDataManager.AddFallBallNum(value);
+        int operationNum= PlayerDataManager.AddFallBallNum(value);
+        int targetNum = RandomGiftNeedFallBall();
+        if (operationNum >= targetNum)
+        {
+            ClearBallFallNum();
+            SpawnAGiftBall();
+        }
+        return operationNum;
     }
-    public int UseProp1ByCoin()
+    public void UseProp1()
+    {
+        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        MainController.Instance.UseProp1();
+    }
+    public bool UseProp2()
+    {
+        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        return MainController.Instance.UseProp2();
+    }
+    public int IncreaseByProp1NeedCoin()
     {
         int nextNeedCoin = GetProp1NeedCoinNum() + propNeedCoinNumIncreaseStep;
         nextNeedCoin = Mathf.Clamp(nextNeedCoin, 0, propNeedMaxCoinNum);
         PlayerDataManager.SetProp1NeedCoinNum(nextNeedCoin);
         return nextNeedCoin;
     }
-    public int UseProp2ByCoin()
+    public int IncreaseByProp2NeedCoin()
     {
         int nextNeedCoin = GetProp2NeedCoinNum() + propNeedCoinNumIncreaseStep;
         nextNeedCoin = Mathf.Clamp(nextNeedCoin, 0, propNeedMaxCoinNum);
@@ -226,10 +288,12 @@ public class GameManager : MonoBehaviour
     }
     public Reward ConfirmReward_Type = Reward.Null;
     public int ConfirmRewrad_Num = 0;
-    public void ShowConfirmRewardPanel(Reward type, int num)
+    public bool ConfirmReward_Needad = true;
+    public void ShowConfirmRewardPanel(Reward type, int num, bool needAd = true)
     {
         ConfirmReward_Type = type;
         ConfirmRewrad_Num = num;
+        ConfirmReward_Needad = needAd;
         UIManager.ShowPopPanelByType(type == Reward.Cash ? UI_Panel.UI_PopPanel.RewardCashPanel : UI_Panel.UI_PopPanel.RewardNoCashPanel);
     }
     private struct WheelRandom
@@ -288,7 +352,6 @@ public class GameManager : MonoBehaviour
     }
     public int RandomGiftNeedFallBall()
     {
-        ClearBallFallNum();
         bool isPackB = GetIsPackB();
         if (isPackB)
         {
@@ -297,7 +360,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetStage());
+            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetLevel());
             return Random.Range(giftDataA.fallBallNumRange.x, giftDataA.fallBallNumRange.y);
         }
     }
@@ -327,7 +390,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetStage());
+            GiftDataA giftDataA = ConfigManager.GetGiftAData(GetLevel());
             rewardNum = Random.Range(giftDataA.rewardCoinNumRange.x, giftDataA.rewardCoinNumRange.y);
             return Reward.Coin;
         }
@@ -340,14 +403,145 @@ public class GameManager : MonoBehaviour
     {
         MainController.Instance.OnRestartGame();
         PlayerDataManager.SetScore(0);
-        PlayerDataManager.SetStage(0);
+        PlayerDataManager.SetLevel(0);
         RefreshUpgradeNeedScore();
+        PlayerDataManager.SetProp1NeedCoinNum(originPropNeedCoinNum);
+        PlayerDataManager.SetProp2NeedCoinNum(originPropNeedCoinNum);
+        PlayerDataManager.ReSetLevelTargetBallNum();
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
             _MenuPanel.RefreshScoreText();
             _MenuPanel.ResetStageProgress();
             _MenuPanel.SetStageInfo();
+            _MenuPanel.RefreshProp1();
+            _MenuPanel.RefreshProp2();
+        }
+        LevelManager.SetTargetBallNum(PlayerDataManager.GetLevelTargetBallNum());
+    }
+    public void WhenLevelUpAnimationEnd()
+    {
+
+    }
+    public void WhenLoadingGameEnd()
+    {
+        isLoadingEnd = true;
+        if (GetWhetherFirstPlay())
+            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        MainController.Instance.LoadSaveData();
+        stopGuideGame = false;
+        CheckGuideGameAndShow();
+    }
+    public void WhenGetGfitBall()
+    {
+        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+    }
+    public void SpawnAGiftBall()
+    {
+        MainController.Instance.SpawnNewGiftBall();
+    }
+    public bool GetWhetherFirstPlay()
+    {
+        return PlayerDataManager.GetWhetherFirstPlay();
+    }
+    public void SetFirstPlayFalse()
+    {
+        PlayerDataManager.SetFirstPlayFalse();
+    }
+    public bool GetWhetherRateus()
+    {
+        return PlayerDataManager.GetWhetherRateus();
+    }
+    public void SetHasRateus()
+    {
+        PlayerDataManager.SetHasRateus();
+    }
+    public bool GetHasGetFreeGift()
+    {
+        return PlayerDataManager.playerData.hasGetFreeGift;
+    }
+    public void SetHasGetFreeGift()
+    {
+        PlayerDataManager.playerData.hasGetFreeGift = true;
+        PlayerDataManager.Save();
+    }
+    public RectTransform hand;
+    private bool stopGuideGame = false;
+    private void CheckGuideGameAndShow()
+    {
+        if (PlayerDataManager.playerData.hasGuideGame) return;
+        StartCoroutine("ShakeGuidegameHand");
+    }
+    public void StopGuideGame()
+    {
+        stopGuideGame = true;
+        PlayerDataManager.playerData.hasGuideGame = true;
+        PlayerDataManager.Save();
+    }
+    IEnumerator ShakeGuidegameHand()
+    {
+        hand.gameObject.SetActive(true);
+        bool isRight = false;
+        float leftX = -144;
+        float rightX = 144;
+        float y = hand.localPosition.y;
+        hand.localPosition = new Vector3(leftX, y, 0);
+        while (!stopGuideGame)
+        {
+            yield return null;
+            float offset = Time.deltaTime*20;
+            hand.Translate(new Vector3(isRight ? -offset : offset, 0, 0));
+            if (hand.localPosition.x >= rightX)
+                isRight = true;
+            else if (hand.localPosition.x <= leftX)
+                isRight = false;
+        }
+        hand.gameObject.SetActive(false);
+    }
+    public bool GetMusicOn()
+    {
+        return PlayerDataManager.playerData.musicOn;
+    }
+    public void SetSaveMusicState(bool isOn)
+    {
+        PlayerDataManager.playerData.musicOn = isOn;
+        PlayerDataManager.Save();
+        AudioManager.SetMusicState(isOn);
+    }
+    public bool GetSoundOn()
+    {
+        return PlayerDataManager.playerData.soundOn;
+    }
+    public void SetSaveSoundState(bool isOn)
+    {
+        PlayerDataManager.playerData.soundOn = isOn;
+        PlayerDataManager.Save();
+        AudioManager.SetSoundState(isOn);
+    }
+    public void PlayButtonClickSound()
+    {
+        AudioManager.PlayOneShot(AudioPlayArea.Button);
+    }
+    public AudioSource PlaySpinSound()
+    {
+        return AudioManager.PlayLoop(AudioPlayArea.Spin);
+    }
+    public void PlayMergeBallCombeSound(int combe)
+    {
+        switch (combe)
+        {
+            case 1:
+                AudioManager.PlayOneShot(AudioPlayArea.Combo1);
+                break;
+            case 2:
+                AudioManager.PlayOneShot(AudioPlayArea.Combo2);
+                break;
+            case 3:
+                AudioManager.PlayOneShot(AudioPlayArea.Combo3);
+                break;
+            default:
+                AudioManager.PlayOneShot(AudioPlayArea.Combo3);
+                break;
         }
     }
 }

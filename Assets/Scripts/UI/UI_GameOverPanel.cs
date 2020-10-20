@@ -27,12 +27,14 @@ namespace UI
         }
         private void OnContinueClick()
         {
+            GameManager.PlayButtonClickSound();
             StopCoroutine("AutoTimeDown");
             UIManager.ClosePopPanel(this);
             GameManager.ContinueGame();
         }
         private void OnNothanksClick()
         {
+            GameManager.PlayButtonClickSound();
             StopCoroutine("AutoTimeDown");
             continueAll.alpha = 0;
             continueAll.blocksRaycasts = false;
@@ -43,6 +45,7 @@ namespace UI
         }
         private void OnRestartButtonClick()
         {
+            GameManager.PlayButtonClickSound();
             UIManager.ClosePopPanel(this);
             GameManager.RestartGame();
         }

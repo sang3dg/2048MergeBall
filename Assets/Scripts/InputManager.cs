@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class InputManager : MonoBehaviour, IDragHandler,IPointerUpHandler,IPointerDownHandler
 {
     public static InputManager Instance;
+    public RectTransform handRect;
     Image img;
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class InputManager : MonoBehaviour, IDragHandler,IPointerUpHandler,IPoint
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        GameManager.Instance.StopGuideGame();
         MainController.Instance.OnStartDrag();
     }
 

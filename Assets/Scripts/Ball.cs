@@ -6,13 +6,12 @@ using UnityEngine.UI;
 
 public class Ball : MonoBehaviour
 {
+    public static int CombeNum = 0;
     public Image img_icon;
     public Text text_num;
     public RectTransform rect_self;
     public RectTransform rect_text;
     public GameObject go_explosion;
-    [NonSerialized]
-    public BallType Type = BallType.Normal;
     [NonSerialized]
     public int Num;
     [NonSerialized]
@@ -27,27 +26,78 @@ public class Ball : MonoBehaviour
     public void InitBall(int num)
     {
         Num = num;
-        MainController.Instance.CheckNewMaxNum(num);
         BallBaseData config = ConfigManager.GetBallBaseConfig(num);
-        img_icon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Main, config.BallSpriteName.ToString());
-        string numStr = num.ToString();
-        text_num.text = numStr;
+        MainController.Instance.RefreshCurrentBallMaxNum();
+        img_icon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Ball, config.BallSpriteName.ToString());
         rect_self.localScale = new Vector3(config.BallSize, config.BallSize);
-        float text_width = numStr.Length * 100;
-        rect_text.sizeDelta = new Vector2(text_width, GameManager.ballTextHeight);
-        float text_scale = GameManager.ballCircle / (text_width+50);
-        rect_text.localScale = new Vector3(text_scale, text_scale);
+        if (num > 0)
+        {
+            string numStr = ToolManager.GetBallNumShowString(num);
+            text_num.text = numStr;
+            float text_width = numStr.Length * 100;
+            rect_text.sizeDelta = new Vector2(text_width, GameManager.ballTextHeight);
+            float text_scale = GameManager.ballCircle / (text_width + 50);
+            rect_text.localScale = new Vector3(text_scale, text_scale);
+            if (!text_num.gameObject.activeSelf)
+                text_num.gameObject.SetActive(true);
+        }
+        else
+            text_num.gameObject.SetActive(false);
+    }
+    public void MergeSelfNum()
+    {
+        InitBall(Num + Num);
+        GameManager.Instance.AddScore(Num);
+        PlayMergeEffect();
+    }
+    private void PlayMergeEffect()
+    {
+        isExplosion = true;
+        go_explosion.SetActive(false);
+        go_explosion.SetActive(true);
+        CombeNum++;
+        GameManager.Instance.PlayMergeBallCombeSound(CombeNum);
+        StopCoroutine("WaitForExplosion");
+        StartCoroutine("WaitForExplosion");
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!hasSpawNew)
         {
-            MainController.Instance.SpawnNewBall();
+            if (Num != -2)
+            {
+                GameManager.Instance.AddBallFallNum();
+                MainController.Instance.SpawnNewBall();
+                CombeNum = 0;
+            }
             hasSpawNew = true;
         }
         if (!isExplosion && collision.collider.CompareTag("Ball"))
         {
             Ball otherBall = collision.gameObject.GetComponent<Ball>();
+            if (Num < 0)
+            {
+                if (willBeDestory)
+                    return;
+                switch (Num)
+                {
+                    case -1:
+                        otherBall.MergeSelfNum();
+                        willBeDestory = true;
+                        Destroy(gameObject);
+                        return;
+                    case -2:
+                        if (otherBall.rect_self.localPosition.y >= rect_self.localPosition.y)
+                        {
+                            otherBall.willBeDestory = true;
+                            InitBall(otherBall.Num);
+                            Destroy(otherBall.gameObject);
+                            GameManager.Instance.WhenGetGfitBall();
+                            PlayMergeEffect();
+                        }
+                        return;
+                }
+            }
             if (!otherBall.willBeDestory && Num == otherBall.Num)
             {
                 if (otherBall.rect_self.localPosition.y >= rect_self.localPosition.y)
@@ -55,18 +105,11 @@ public class Ball : MonoBehaviour
                     if (!otherBall.isExplosion)
                     {
                         otherBall.willBeDestory = true;
-                        MainController.Instance.RecycleBall(otherBall.gameObject);
+                        Destroy(otherBall.gameObject);
                         isExplosion = true;
                         go_explosion.SetActive(false);
                         go_explosion.SetActive(true);
-                        InitBall(Num * 2);
-                        GameManager.Instance.AddScore(Num);
-                        if (gameObject.activeSelf)
-                            StartCoroutine("WaitForExplosion");
-                        else
-                        {
-                            isExplosion = false;
-                        }
+                        MergeSelfNum();
                     }
                 }
             }
@@ -82,10 +125,4 @@ public class Ball : MonoBehaviour
         yield return new WaitForSeconds(GameManager.ballExplosionTime);
         isExplosion = false;
     }
-}
-public enum BallType
-{
-    Normal,
-    Prop1,
-    Prop2,
 }

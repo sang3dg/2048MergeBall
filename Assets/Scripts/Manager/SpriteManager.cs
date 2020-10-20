@@ -17,7 +17,7 @@ public class SpriteManager
     }
     readonly Dictionary<SpriteAtlas_Name, string> spriteAtlasPathDic = new Dictionary<SpriteAtlas_Name, string>()
     {
-        { SpriteAtlas_Name.Main,"SpriteAtlas/Main" },
+        { SpriteAtlas_Name.Ball,"SpriteAtlas/Ball" },
         { SpriteAtlas_Name.RewardNoCash,"SpriteAtlas/RewardNoCash"},
         { SpriteAtlas_Name.Menu,"SpriteAtlas/Menu"},
         { SpriteAtlas_Name.BuyProp,"SpriteAtlas/BuyProp"},
@@ -108,7 +108,7 @@ public class SpriteManager
 }
 public enum SpriteAtlas_Name
 {
-    Main,
+    Ball,
     RewardNoCash,
     Menu,
     BuyProp,
