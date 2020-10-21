@@ -30,6 +30,7 @@ public class PlayerDataManager
                     spinWheelTimeTotal = 0,
                     fallBallNum = 0,
                     score = 0,
+                    currentLevelScore = 0,
                     bestScore = 0,
                     level = 0,
                     currentBallNum = 0,
@@ -42,7 +43,14 @@ public class PlayerDataManager
                     hasGetFreeGift = false,
                     hasGuideGame = false,
                     musicOn = true,
-                    soundOn = true
+                    soundOn = true,
+
+                    logPerTenBall = 0,
+                    logRestartTime = 0,
+                    logGiftBallAppearTime = 0,
+                    logOpenGiftBallTime = 0,
+                    logSpinWheelTime = 0,
+                    logSpinSlotsTime = 0
                 };
                 Save();
             }
@@ -341,6 +349,7 @@ public class PlayerData
     public int spinWheelTimeTotal;
     public int fallBallNum;
     public int score;
+    public int currentLevelScore;
     public int bestScore;
     public int level;
     public int currentBallNum;
@@ -354,4 +363,11 @@ public class PlayerData
     public bool hasGuideGame;
     public bool musicOn;
     public bool soundOn;
+
+    public int logPerTenBall;
+    public int logRestartTime;
+    public int logGiftBallAppearTime;
+    public int logOpenGiftBallTime;
+    public int logSpinWheelTime;
+    public int logSpinSlotsTime;
 }

@@ -197,15 +197,15 @@ MonoBehaviour:
     coinRange: {x: 150, y: 250}
     coinWeight: 0
   - maxCash: 3000
-    cashRange: {x: 300, y: 500}
+    cashRange: {x: 100, y: 150}
     cashWeight: 100
     coinRange: {x: 150, y: 250}
     coinWeight: 0
   - maxCash: 4000
-    cashRange: {x: 200, y: 400}
+    cashRange: {x: 100, y: 120}
     cashWeight: 80
     coinRange: {x: 150, y: 250}
-    coinWeight: 0
+    coinWeight: 15
   - maxCash: 5000
     cashRange: {x: 100, y: 120}
     cashWeight: 80
@@ -217,17 +217,17 @@ MonoBehaviour:
     coinRange: {x: 150, y: 250}
     coinWeight: 15
   - maxCash: 6000
-    cashRange: {x: 20, y: 50}
+    cashRange: {x: 30, y: 50}
     cashWeight: 80
     coinRange: {x: 150, y: 250}
     coinWeight: 15
   - maxCash: 6500
-    cashRange: {x: 10, y: 20}
+    cashRange: {x: 20, y: 40}
     cashWeight: 50
     coinRange: {x: 150, y: 250}
     coinWeight: 40
   - maxCash: 7000
-    cashRange: {x: 10, y: 10}
+    cashRange: {x: 10, y: 20}
     cashWeight: 50
     coinRange: {x: 150, y: 250}
     coinWeight: 40
@@ -379,7 +379,7 @@ MonoBehaviour:
   - maxCash: 4000
     fallBallNumRange: {x: 20, y: 20}
     cashWeight: 80
-    coinWeight: 0
+    coinWeight: 15
     rewardCashNumRange: {x: 100, y: 120}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 5000
@@ -407,37 +407,37 @@ MonoBehaviour:
     rewardCashNumRange: {x: 10, y: 20}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 7000
-    fallBallNumRange: {x: 50, y: 50}
+    fallBallNumRange: {x: 30, y: 30}
     cashWeight: 50
     coinWeight: 40
     rewardCashNumRange: {x: 10, y: 15}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 7500
-    fallBallNumRange: {x: 50, y: 50}
+    fallBallNumRange: {x: 30, y: 30}
     cashWeight: 50
     coinWeight: 40
     rewardCashNumRange: {x: 5, y: 8}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 8000
-    fallBallNumRange: {x: 100, y: 100}
+    fallBallNumRange: {x: 30, y: 30}
     cashWeight: 30
     coinWeight: 50
     rewardCashNumRange: {x: 3, y: 5}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 8200
-    fallBallNumRange: {x: 200, y: 200}
+    fallBallNumRange: {x: 50, y: 50}
     cashWeight: 30
     coinWeight: 50
     rewardCashNumRange: {x: 1, y: 3}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 8400
-    fallBallNumRange: {x: 200, y: 200}
+    fallBallNumRange: {x: 50, y: 50}
     cashWeight: 30
     coinWeight: 50
     rewardCashNumRange: {x: 1, y: 3}
     rewardCoinNumRange: {x: 150, y: 150}
   - maxCash: 8600
-    fallBallNumRange: {x: 200, y: 200}
+    fallBallNumRange: {x: 50, y: 50}
     cashWeight: 10
     coinWeight: 70
     rewardCashNumRange: {x: 1, y: 3}

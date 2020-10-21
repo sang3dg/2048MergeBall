@@ -24,23 +24,32 @@ namespace UI
         private void OnCloseClick()
         {
             GameManager.PlayButtonClickSound();
+            GameManager.PlayIV("放弃现金奖励");
             UIManager.ClosePopPanel(this);
         }
+        int clickAdTime = 0;
         private void OnGetClick()
         {
             GameManager.PlayButtonClickSound();
             if (needAd)
-                Debug.Log("看广告得现金");
+            {
+                clickAdTime++;
+                GameManager.PlayRV(OnAdGetCallback, clickAdTime, "获得现金", OnCloseClick);
+            }
             else
-                Debug.Log("免费得现金");
+                OnAdGetCallback();
+        }
+        private void OnAdGetCallback()
+        {
             GameManager.AddCash(rewardNum);
+            UIManager.FlyReward(Reward.Cash, rewardNum, transform.position);
             UIManager.ClosePopPanel(this);
         }
-
         int rewardNum = 0;
         bool needAd = true;
         protected override void OnStartShow()
         {
+            clickAdTime = 0;
             if (GameManager.ConfirmReward_Type != Reward.Cash)
             {
                 Debug.LogError("奖励类型错误");
@@ -53,6 +62,19 @@ namespace UI
             closeButton.gameObject.SetActive(needAd);
             adicon.SetActive(needAd);
             getContentRect.localPosition = needAd ? new Vector3(54.5f, 6, 0) : new Vector3(0, 6, 0);
+        }
+        protected override void OnEndClose()
+        {
+            if (GameManager.WillShowGift > 0)
+            {
+                GameManager.WillShowGift--;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+            }
+            else if (GameManager.WillShowSlots > 0)
+            {
+                GameManager.WillShowSlots--;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SlotsPanel);
+            }
         }
     }
 }

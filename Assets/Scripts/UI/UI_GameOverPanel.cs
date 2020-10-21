@@ -25,10 +25,16 @@ namespace UI
             nothanksButton.onClick.AddListener(OnNothanksClick);
             restartButton.onClick.AddListener(OnRestartButtonClick);
         }
+        int clickAdTime = 0;
         private void OnContinueClick()
         {
             GameManager.PlayButtonClickSound();
             StopCoroutine("AutoTimeDown");
+            clickAdTime++;
+            GameManager.PlayRV(OnContinueAdCallback, clickAdTime, "死亡复活", OnNothanksClick);
+        }
+        private void OnContinueAdCallback()
+        {
             UIManager.ClosePopPanel(this);
             GameManager.ContinueGame();
         }
@@ -47,6 +53,7 @@ namespace UI
         {
             GameManager.PlayButtonClickSound();
             UIManager.ClosePopPanel(this);
+            GameManager.SendAdjustGameOverEvent(true);
             GameManager.RestartGame();
         }
         protected override void OnStartShow()
@@ -56,6 +63,7 @@ namespace UI
             gameoverAll.alpha = 0;
             gameoverAll.blocksRaycasts = false;
             nothanksButton.gameObject.SetActive(false);
+            clickAdTime = 0;
         }
         protected override void OnEndShow()
         {

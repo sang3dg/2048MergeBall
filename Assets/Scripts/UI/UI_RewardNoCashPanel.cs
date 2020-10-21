@@ -21,13 +21,20 @@ namespace UI
             adButton.onClick.AddListener(OnAdClick);
             nothanksButton.onClick.AddListener(OnNothanksClick);
         }
+        int clickAdTime = 0;
         private void OnAdClick()
         {
             GameManager.PlayButtonClickSound();
             if (needAd)
-                Debug.Log("看广告得双倍");
+            {
+                clickAdTime++;
+                GameManager.PlayRV(OnAdGetDoubleCallback, clickAdTime, "获得双倍" + type, OnNothanksClick);
+            }
             else
-                Debug.Log("免费得双倍");
+                OnAdGetDoubleCallback();
+        }
+        private void OnAdGetDoubleCallback()
+        {
             num *= 2;
             GetReward();
             UIManager.ClosePopPanel(this);
@@ -35,6 +42,10 @@ namespace UI
         private void OnNothanksClick()
         {
             GameManager.PlayButtonClickSound();
+            GameManager.PlayIV("放弃双倍奖励" + type, OnNothanksIVCallback);
+        }
+        private void OnNothanksIVCallback()
+        {
             GetReward();
             UIManager.ClosePopPanel(this);
         }
@@ -43,6 +54,7 @@ namespace UI
         bool needAd = true;
         protected override void OnStartShow()
         {
+            clickAdTime = 0;
             type = GameManager.ConfirmReward_Type;
             num = GameManager.ConfirmRewrad_Num;
             needAd = GameManager.ConfirmReward_Needad;
@@ -57,20 +69,39 @@ namespace UI
             switch (type)
             {
                 case Reward.Prop1:
-                    GameManager.AddPop1Num(num);
+                    Debug.LogError("奖励类型错误，该面板不会奖励道具1");
                     break;
                 case Reward.Prop2:
-                    GameManager.AddPop2Num(num);
+                    Debug.LogError("奖励类型错误，该面板不会奖励道具2");
                     break;
                 case Reward.Cash:
                     Debug.LogError("奖励类型错误，该面板不会奖励现金");
                     break;
                 case Reward.Coin:
                     GameManager.AddCoin(num);
+                    UIManager.FlyReward(Reward.Coin, num, transform.position);
                     break;
                 case Reward.Amazon:
                     GameManager.AddAmazon(num);
+                    UIManager.FlyReward(Reward.Amazon, num, transform.position);
                     break;
+                case Reward.WheelTicket:
+                    GameManager.AddWheelTicket(num);
+                    UIManager.FlyReward(Reward.WheelTicket, num, transform.position);
+                    break;
+            }
+        }
+        protected override void OnEndClose()
+        {
+            if (GameManager.WillShowGift > 0)
+            {
+                GameManager.WillShowGift--;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+            }
+            else if (GameManager.WillShowSlots > 0)
+            {
+                GameManager.WillShowSlots--;
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SlotsPanel);
             }
         }
     }

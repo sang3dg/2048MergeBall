@@ -25,7 +25,6 @@ namespace UI
             _CanvasGroup = GetComponent<CanvasGroup>();
             State = UI_State.Unknow;
             hasNewID = true;
-            Debug.Log("面板ID: " + UI_ID);
         }
         public IEnumerator ShowThisPanel()
         {

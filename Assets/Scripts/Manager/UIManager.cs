@@ -304,6 +304,52 @@ namespace UI
                 Debug.LogWarning("没有加载该面板!");
             return null;
         }
+        public bool PanelWhetherShow(params int[] panelTypes)
+        {
+            int length = panelTypes.Length;
+            for(int i = 0; i < length; i++)
+            {
+                if (UI_Type_Loaded_Dic.ContainsKey(panelTypes[i]))
+                {
+                    int count = UI_Type_Loaded_Dic[panelTypes[i]].Count;
+                    for (int j = 0; j < count; j++)
+                    {
+                        if (UI_Type_Loaded_Dic[panelTypes[i]][j].State == UI_State.Show)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool PanelWhetherShowExcept(int exceptPanelType)
+        {
+            foreach(var list in UI_Type_Loaded_Dic)
+            {
+                if (list.Key == exceptPanelType || list.Key == UI_Panel.MenuPanel)
+                    continue;
+                foreach (var panel in list.Value)
+                    if (panel.State == UI_State.Show)
+                        return true;
+            }
+            return false;
+        }
+        public bool PanelWhetherShowAnyone()
+        {
+            foreach (var list in UI_Type_Loaded_Dic)
+            {
+                if (list.Key == UI_Panel.MenuPanel)
+                    continue;
+                foreach (var panel in list.Value)
+                    if (panel.State == UI_State.Show)
+                        return true;
+            }
+            return false;
+        }
+        public void FlyReward(Reward type, int num, Vector3 startWorldPos)
+        {
+            var menu = GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+            menu.FlyReward_GetTargetPosAndCallback_ThenFly(type, num, startWorldPos);
+        }
     }
     public struct UI_Panel
     {

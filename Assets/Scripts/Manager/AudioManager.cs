@@ -20,6 +20,7 @@ public class AudioManager
         {AudioPlayArea.Combo3,"combo3" },
         {AudioPlayArea.Button,"button" },
         {AudioPlayArea.Spin,"spin" },
+        {AudioPlayArea.FlyOver,"fly" },
     };
     private static readonly Dictionary<AudioPlayArea, AudioClip> loadedAudioclipDic = new Dictionary<AudioPlayArea, AudioClip>();
     private static readonly List<AudioSource> allPlayer = new List<AudioSource>();
@@ -140,4 +141,5 @@ public enum AudioPlayArea
     Combo1,
     Combo2,
     Combo3,
+    FlyOver,
 }

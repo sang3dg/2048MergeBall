@@ -59,6 +59,8 @@ public class UI_SlotsPanel : UI_PopPanelBase
         {
             Debug.Log("免费转动老虎机");
         }
+        GameManager.AddSpinSlotsTime();
+        GameManager.SendAdjustSpinSlotsEvent();
         reward = GameManager.RandomSlotsReward();
         if (reward < 0)
         {

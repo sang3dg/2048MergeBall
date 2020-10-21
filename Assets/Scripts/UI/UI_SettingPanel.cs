@@ -38,6 +38,7 @@ namespace UI
         private void OnRestartClick()
         {
             GameManager.PlayButtonClickSound();
+            GameManager.SendAdjustGameOverEvent(false);
             GameManager.RestartGame();
             UIManager.ClosePopPanel(this);
         }

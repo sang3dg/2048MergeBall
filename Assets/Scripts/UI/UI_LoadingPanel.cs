@@ -22,20 +22,26 @@ namespace UI
             progress_slider.value = 0;
             progress_text.text = "0%";
             float progress = 0;
-            float speed = 0.1f;
+            float speed;
             float nowTime = Time.realtimeSinceStartup;
-            float loadingtime = 0;
+            float loadingtime;
+            if (!GameManager.GetIsPackB())
+                StartCoroutine("WaitFor");
             while (progress < 1)
             {
                 yield return null;
                 float deltatime = Mathf.Clamp(Time.unscaledDeltaTime, 0, 0.04f);
                 loadingtime = Time.realtimeSinceStartup - nowTime;
-                speed = loadingtime >= maxloadingWaitTime ? 1 : 0.1f;
+                if (GameManager.GetIsPackB())
+                    speed = 1;
+                else
+                    speed = loadingtime >= maxloadingWaitTime ? 1 : 0.1f;
                 progress += deltatime * speed;
                 progress = Mathf.Clamp(progress, 0, 1);
                 progress_slider.value = progress;
                 progress_text.text = (int)(progress * 100) + "%";
             }
+            StopCoroutine("WaitFor");
             UIManager.ClosePopPanelByID(UI_ID);
             UIManager.ReleasePanel(this);
             UIManager.ShowPopPanelByType(UI_Panel.MenuPanel);
@@ -47,9 +53,9 @@ namespace UI
             yield break;
 #endif
 #if UNITY_ANDROID
-            UnityWebRequest webRequest = new UnityWebRequest("http://ec2-18-217-224-143.us-east-2.compute.amazonaws.com:3636/event/switch?package=com.LuckyDice.HappyDice.IdleCasualGame.FunDay&version=13&os=android");
+            UnityWebRequest webRequest = new UnityWebRequest("http://ec2-18-217-224-143.us-east-2.compute.amazonaws.com:3636/event/switch?package=com.MergeBall.LuckyGame.HugePrizes.Rewards&version=1&os=android");
 #elif UNITY_IOS
-            UnityWebRequest webRequest = new UnityWebRequest("http://ec2-18-217-224-143.us-east-2.compute.amazonaws.com:3636/event/switch?package=com.LuckyDice.HappyDice.IdleCasualGame.FunDay&version=13&os=ios");
+            UnityWebRequest webRequest = new UnityWebRequest("http://ec2-18-217-224-143.us-east-2.compute.amazonaws.com:3636/event/switch?package=com.MergeBall.LuckyGame.HugePrizes.Rewards&version=1&os=ios");
 #endif
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             yield return webRequest.SendWebRequest();
@@ -57,7 +63,8 @@ namespace UI
             {
                 if (webRequest.downloadHandler.text.Equals("{\"store_review\": true}"))
                 {
-
+                    if (GameManager.isLoadingEnd)
+                        GameManager.SetIsPackB();
                 }
             }
         }

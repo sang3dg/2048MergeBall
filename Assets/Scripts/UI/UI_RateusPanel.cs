@@ -24,6 +24,14 @@ namespace UI
         private void OnYesClick()
         {
             GameManager.PlayButtonClickSound();
+#if UNITY_ANDROID
+            Application.OpenURL("https://play.google.com/store/apps/details?id=com.MergeBall.LuckyGame.HugePrizes.Rewards");
+#elif UNITY_IOS
+        var url = string.Format(
+           "itms-apps://itunes.apple.com/cn/app/id{0}?mt=8&action=write-review",
+           "");
+        Application.OpenURL(url);
+#endif
             UIManager.ClosePopPanel(this);
         }
     }

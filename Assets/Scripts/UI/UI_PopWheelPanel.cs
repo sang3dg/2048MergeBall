@@ -52,19 +52,30 @@ namespace UI
         }
         int endIndex = -1;
         bool isSpining = false;
+        int clickAdTime = 0;
         private void OnSpinClick()
         {
             GameManager.PlayButtonClickSound();
             if (isSpining) return;
             if (hasFree)
             {
-                Debug.Log("免费转动转盘");
+                OnAdSpinCallback();
             }
             else
             {
-                if (GameManager.GetWheelTicket() <= 0) return;
-                Debug.Log("观看广告转动转盘");
+                if (GameManager.GetWheelTicket() <= 0)
+                {
+                    TipsManager.Instance.ShowTips("not enough ticet!");
+                    return;
+                }
+                clickAdTime++;
+                GameManager.PlayRV(OnAdSpinCallback, clickAdTime, "转动转盘");
             }
+        }
+        private void OnAdSpinCallback()
+        {
+            GameManager.AddSpinWheelTime();
+            GameManager.SendAdjustSpinWheelEvent();
             isSpining = true;
             endIndex = GameManager.RandomWheelReward();
             StartCoroutine("StartSpinWheel");
@@ -108,6 +119,7 @@ namespace UI
         {
             GameManager.PlayButtonClickSound();
             if (isSpining) return;
+            GameManager.PlayIV("关闭转盘");
             UIManager.ClosePopPanel(this);
         }
         static Vector2 noadSpinPos = new Vector2(0, 3.7f);
@@ -127,15 +139,21 @@ namespace UI
                 spinRect.localPosition = adSpinPos;
             }
         }
-        private void RefreshTicketShowText()
+        public void RefreshTicketShowText()
         {
             ticketNumText.text = "x" + GameManager.GetWheelTicket();
         }
         protected override void OnStartShow()
         {
+            clickAdTime = 0;
             CheckHasFree();
             wheelRect.rotation = Quaternion.identity;
             RefreshTicketShowText();
+        }
+        protected override void OnEndShow()
+        {
+            var menu = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+            menu.rewardTargetTransform.Add(Reward.WheelTicket,ticketNumText.transform.parent);
         }
     }
 }

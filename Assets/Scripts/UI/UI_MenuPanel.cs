@@ -8,6 +8,7 @@ namespace UI
 {
     public class UI_MenuPanel : UI_PanelBase
     {
+        public readonly Dictionary<Reward, Transform> rewardTargetTransform = new Dictionary<Reward, Transform>();
         public Button settingButton;
         public Button cashButton;
         public Button coinButton;
@@ -49,6 +50,18 @@ namespace UI
             stageProgressFillImage.fillAmount = FillStart;
             adIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_ad");
             coinIcon = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Menu, "prop_coin");
+
+            float aspectRadio = Screen.height / (Screen.width * 1f);
+            if (aspectRadio > 16 / 9f)
+            {
+                Vector3 down = new Vector3(0, 80, 0);
+                settingButton.transform.localPosition -= down;
+                cashButton.transform.localPosition -= down;
+                coinButton.transform.localPosition -= down;
+                stageProgressFillImage.transform.parent.localPosition -= down;
+                scoreText.transform.parent.localPosition -= down;
+                wheelButton.transform.parent.localPosition -= down;
+            }
         }
         private void OnSettingButtonClick()
         {
@@ -77,7 +90,7 @@ namespace UI
             GameManager.PlayButtonClickSound();
             if (hasProp1)
             {
-                GameManager.AddPop1Num(-1);
+                GameManager.AddProp1Num(-1);
                 GameManager.UseProp1();
             }
             else
@@ -90,10 +103,15 @@ namespace UI
                 }
                 else
                 {
-                    Debug.Log("观看广告获得道具1");
-                    GameManager.AddPop1Num(1);
+                    GameManager.PlayRV(OnAdBuyProp1Callback, 2, "获得道具1");
                 }
             }
+        }
+        private void OnAdBuyProp1Callback()
+        {
+            GameManager.AddProp1Num(1);
+            GameManager.SendAdjustPropChangeEvent(1, 2);
+            UIManager.FlyReward(Reward.Prop1, 1, transform.position);
         }
         private void OnProp2ButtonClick()
         {
@@ -101,7 +119,7 @@ namespace UI
             if (hasProp2)
             {
                 if(GameManager.UseProp2())
-                    GameManager.AddPop2Num(-1);
+                    GameManager.AddProp2Num(-1);
             }
             else
             {
@@ -113,10 +131,15 @@ namespace UI
                 }
                 else
                 {
-                    Debug.Log("观看广告获得道具2");
-                    GameManager.AddPop2Num(1);
+                    GameManager.PlayRV(OnAdBuyProp2Callback, 2, "获得道具2");
                 }
             }
+        }
+        private void OnAdBuyProp2Callback()
+        {
+            GameManager.AddProp2Num(1);
+            GameManager.SendAdjustPropChangeEvent(2, 2);
+            UIManager.FlyReward(Reward.Prop2, 1, transform.position);
         }
         public void RefreshCashText()
         {
@@ -226,7 +249,10 @@ namespace UI
                     if (stageProgressFillImage.fillAmount > nextFillAmount)
                     {
                         GameManager.nextSlotsIsUpgradeSlots = true;
-                        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SlotsPanel);
+                        if (!UIManager.PanelWhetherShowAnyone() && GameManager.WillShowSlots <= 0)
+                            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SlotsPanel);
+                        else
+                            GameManager.WillShowSlots++;
                         SetStageInfo();
                         GameManager.Instance.SpawnAGiftBall();
                     }
@@ -281,6 +307,76 @@ namespace UI
             guideCG.alpha = 0;
             guideCG.blocksRaycasts = false;
             isGuiding = false;
+        }
+        public void FlyReward_GetTargetPosAndCallback_ThenFly(Reward type,int num,Vector3 startWorldPos)
+        {
+            FlyReward.Instance.FlyToTarget(startWorldPos, GetFlyTargetPos(type), num, type, FlyOverCallback);
+        }
+        private void FlyOverCallback(Reward type)
+        {
+            if (type == Reward.WheelTicket)
+            {
+                var wheelPanel = UIManager.GetUIPanel(UI_Panel.UI_PopPanel.WheelPanel) as UI_PopWheelPanel;
+                wheelPanel.RefreshTicketShowText();
+                return;
+            }
+            StopCoroutine("ExpandTarget");
+            StartCoroutine("ExpandTarget", type);
+        }
+        IEnumerator ExpandTarget(Reward _flyTarget)
+        {
+            if (!rewardTargetTransform.TryGetValue(_flyTarget, out Transform tempTrans))
+                yield break;
+            bool toBiger = true;
+            while (true)
+            {
+                yield return null;
+                if (toBiger)
+                {
+                    tempTrans.localScale += Vector3.one * Time.deltaTime * 3;
+                    if (tempTrans.localScale.x >= 1.3f)
+                    {
+                        toBiger = false;
+                        switch (_flyTarget)
+                        {
+                            case Reward.Prop1:
+                                RefreshProp1();
+                                break;
+                            case Reward.Prop2:
+                                RefreshProp2();
+                                break;
+                            case Reward.Cash:
+                                RefreshCashText();
+                                break;
+                            case Reward.Coin:
+                                RefreshCoinText();
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    tempTrans.localScale -= Vector3.one * Time.deltaTime * 3;
+                    if (tempTrans.localScale.x <= 1f)
+                        break;
+                }
+            }
+            yield return null;
+            tempTrans.localScale = Vector3.one;
+        }
+        private Vector3 GetFlyTargetPos(Reward type)
+        {
+            if (rewardTargetTransform.ContainsKey(type))
+                return rewardTargetTransform[type].position;
+            else
+                return Vector3.zero;
+        }
+        protected override void OnEndShow()
+        {
+            rewardTargetTransform.Add(Reward.Prop1, propButton1.transform);
+            rewardTargetTransform.Add(Reward.Prop2, propButton2.transform);
+            rewardTargetTransform.Add(Reward.Cash, cashButton.transform);
+            rewardTargetTransform.Add(Reward.Coin, coinButton.transform);
         }
     }
 }

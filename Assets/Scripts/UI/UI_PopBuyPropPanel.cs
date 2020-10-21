@@ -26,6 +26,7 @@ namespace UI
         private void OnCloseClick()
         {
             GameManager.PlayButtonClickSound();
+            GameManager.PlayIV("放弃购买道具" + (isProp1 ? "1" : "2"));
             UIManager.ClosePopPanel(this);
         }
         private void OnCoinBuyClick()
@@ -34,30 +35,49 @@ namespace UI
             GameManager.AddCoin(-needCoinNum);
             if (isProp1)
             {
-                GameManager.AddPop1Num(1);
+                GameManager.AddProp1Num(1);
+                UIManager.FlyReward(Reward.Prop1, 1, coinBuyButton.transform.position);
                 GameManager.IncreaseByProp1NeedCoin();
+                GameManager.SendAdjustPropChangeEvent(1, 1);
             }
             else
             {
-                GameManager.AddPop2Num(1);
+                GameManager.AddProp2Num(1);
+                UIManager.FlyReward(Reward.Prop2, 1, coinBuyButton.transform.position);
                 GameManager.IncreaseByProp2NeedCoin();
+                GameManager.SendAdjustPropChangeEvent(2, 1);
             }
             UIManager.ClosePopPanel(this);
         }
+        int clickAdTime = 0;
         private void OnAdBuyClick()
         {
             GameManager.PlayButtonClickSound();
-            Debug.Log("看广告得道具");
+            clickAdTime++;
+            StopCoroutine("DelayShowBuyByCoin");
+            GameManager.PlayRV(OnAdBuyCallback, clickAdTime, isProp1 ? "获得道具1" : "获得道具2",OnEndShow);
+        }
+        private void OnAdBuyCallback()
+        {
             if (isProp1)
-                GameManager.AddPop1Num(1);
+            {
+                GameManager.AddProp1Num(1);
+                GameManager.SendAdjustPropChangeEvent(1, 2);
+                UIManager.FlyReward(Reward.Prop1, 1, coinBuyButton.transform.position);
+            }
             else
-                GameManager.AddPop2Num(1);
+            {
+                GameManager.AddProp2Num(1);
+                GameManager.SendAdjustPropChangeEvent(2, 2);
+                UIManager.FlyReward(Reward.Prop2, 1, coinBuyButton.transform.position);
+            }
             UIManager.ClosePopPanel(this);
         }
         bool isProp1 = false;
         int needCoinNum = 0;
         protected override void OnStartShow()
         {
+            clickAdTime = 0;
             isProp1 = GameManager.WillBuyProp == Reward.Prop1;
             needCoinNum = isProp1 ? GameManager.GetProp1NeedCoinNum() : GameManager.GetProp2NeedCoinNum();
             icon.sprite = isProp1 ? prop1icon : prop2icon;

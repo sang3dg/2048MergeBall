@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,6 +36,10 @@ public class GameManager : MonoBehaviour
     public float CurrentLevelProgress = 0;
     [System.NonSerialized]
     public Reward WillBuyProp = Reward.Null;
+    [System.NonSerialized]
+    public int WillShowSlots = 0;
+    [System.NonSerialized]
+    public int WillShowGift = 0;
     private void Awake()
     {
         Instance = this;
@@ -54,12 +59,18 @@ public class GameManager : MonoBehaviour
     }
     public bool GetIsPackB()
     {
+#if UNITY_EDITOR
         return true;
+#endif
         return PlayerDataManager.GetIsPackB();
     }
     public void SetIsPackB()
     {
-        PlayerDataManager.SetIsPackB();
+        if (!GetIsPackB())
+        {
+            PlayerDataManager.SetIsPackB();
+            SendAdjustChangePackBEvent();
+        }
     }
     public int GetCurrentStageUpgradeNeedScore(int currentStage)
     {
@@ -68,18 +79,19 @@ public class GameManager : MonoBehaviour
     public void AddScore(int value)
     {
         bool isBest = PlayerDataManager.SetScore(GetScore() + value);
+        SetCurrentLevelScore(GetCurrentLevelScore() + value);
         if (!GetWhetherRateus() && GetScore() >= 1000)
         {
             SetHasRateus();
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.RateusPanel);
         }
-        if (GetScore() >= UpgradeNeedScore)
+        if (GetCurrentLevelScore() >= UpgradeNeedScore)
         {
-            PlayerDataManager.SetScore(0);
+            SetCurrentLevelScore(0);
             PlayerDataManager.SetLevel(GetLevel() + 1);
             RefreshUpgradeNeedScore();
         }
-        CurrentLevelProgress = GetLevel() + GetScore() / (UpgradeNeedScore * 1f);
+        CurrentLevelProgress = GetLevel() + GetCurrentLevelScore() / (UpgradeNeedScore * 1f);
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
@@ -91,6 +103,15 @@ public class GameManager : MonoBehaviour
     public int GetScore()
     {
         return PlayerDataManager.GetScore();
+    }
+    public int GetCurrentLevelScore()
+    {
+        return PlayerDataManager.playerData.currentLevelScore;
+    }
+    public void SetCurrentLevelScore(int value)
+    {
+        PlayerDataManager.playerData.currentLevelScore = value;
+        PlayerDataManager.Save();
     }
     public int GetBestScore()
     {
@@ -167,7 +188,8 @@ public class GameManager : MonoBehaviour
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
-            _MenuPanel.RefreshCoinText();
+            if (value < 0)
+                _MenuPanel.RefreshCoinText();
             _MenuPanel.RefreshProp1();
             _MenuPanel.RefreshProp2();
         }
@@ -179,7 +201,8 @@ public class GameManager : MonoBehaviour
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
-            _MenuPanel.RefreshCashText();
+            if (value < 0)
+                _MenuPanel.RefreshCashText();
             if (!PlayerDataManager.GetWhetherGuideCash())
             {
                 PlayerDataManager.SetHasGuideCash();
@@ -203,23 +226,25 @@ public class GameManager : MonoBehaviour
         }
         return endValue;
     }
-    public int AddPop1Num(int value)
+    public int AddProp1Num(int value)
     {
         int currentPropNum = PlayerDataManager.AddPop1Num(value);
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
-            _MenuPanel.RefreshProp1();
+            if (value < 0)
+                _MenuPanel.RefreshProp1();
         }
         return currentPropNum;
     }
-    public int AddPop2Num(int value)
+    public int AddProp2Num(int value)
     {
         int currentPropNum = PlayerDataManager.AddPop2Num(value);
         UI_MenuPanel _MenuPanel = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
         if (_MenuPanel != null)
         {
-            _MenuPanel.RefreshProp2();
+            if (value < 0)
+                _MenuPanel.RefreshProp2();
         }
         return currentPropNum;
     }
@@ -229,6 +254,10 @@ public class GameManager : MonoBehaviour
     }
     public int AddBallFallNum(int value = 1)
     {
+        PlayerDataManager.playerData.logPerTenBall++;
+        if (PlayerDataManager.playerData.logPerTenBall > 0 && PlayerDataManager.playerData.logPerTenBall % 10 == 0)
+            SendAdjustPerTenBallEvent();
+
         int operationNum= PlayerDataManager.AddFallBallNum(value);
         int targetNum = RandomGiftNeedFallBall();
         if (operationNum >= targetNum)
@@ -238,15 +267,28 @@ public class GameManager : MonoBehaviour
         }
         return operationNum;
     }
+    [System.NonSerialized]
+    public bool isPropGift = false;
     public void UseProp1()
     {
-        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        StartCoroutine(DelayShowUsePropGiftPanel());
+        SendAdjustPropChangeEvent(1, 0);
         MainController.Instance.UseProp1();
     }
     public bool UseProp2()
     {
-        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        StartCoroutine(DelayShowUsePropGiftPanel());
+        SendAdjustPropChangeEvent(2, 0);
         return MainController.Instance.UseProp2();
+    }
+    private IEnumerator DelayShowUsePropGiftPanel()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isPropGift = true;
+        if (!UIManager.PanelWhetherShowAnyone() && WillShowGift <= 0)
+            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        else
+            WillShowGift++;
     }
     public int IncreaseByProp1NeedCoin()
     {
@@ -398,9 +440,11 @@ public class GameManager : MonoBehaviour
     public void ContinueGame()
     {
         MainController.Instance.OnContinueGame();
+        SendAdjustGameOverEvent(true);
     }
     public void RestartGame()
     {
+        PlayerDataManager.playerData.logRestartTime++;
         MainController.Instance.OnRestartGame();
         PlayerDataManager.SetScore(0);
         PlayerDataManager.SetLevel(0);
@@ -434,7 +478,10 @@ public class GameManager : MonoBehaviour
     }
     public void WhenGetGfitBall()
     {
-        UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        if (!UIManager.PanelWhetherShowAnyone() && WillShowGift <= 0)
+            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        else
+            WillShowGift++;
     }
     public void SpawnAGiftBall()
     {
@@ -465,6 +512,27 @@ public class GameManager : MonoBehaviour
         PlayerDataManager.playerData.hasGetFreeGift = true;
         PlayerDataManager.Save();
     }
+    public void AddGiftBallAppearTime(int num = 1)
+    {
+        PlayerDataManager.playerData.logGiftBallAppearTime += num;
+        PlayerDataManager.Save();
+    }
+    public void AddOpenGiftBallNum(int num = 1)
+    {
+        PlayerDataManager.playerData.logOpenGiftBallTime += num;
+        PlayerDataManager.Save();
+    }
+    public void AddSpinWheelTime(int num = 1)
+    {
+        PlayerDataManager.playerData.logSpinWheelTime += num;
+        PlayerDataManager.Save();
+    }
+    public void AddSpinSlotsTime(int num = 1)
+    {
+        PlayerDataManager.playerData.logSpinSlotsTime += num;
+        PlayerDataManager.Save();
+    }
+
     public RectTransform hand;
     private bool stopGuideGame = false;
     private void CheckGuideGameAndShow()
@@ -498,6 +566,8 @@ public class GameManager : MonoBehaviour
         }
         hand.gameObject.SetActive(false);
     }
+
+
     public bool GetMusicOn()
     {
         return PlayerDataManager.playerData.musicOn;
@@ -543,6 +613,161 @@ public class GameManager : MonoBehaviour
                 AudioManager.PlayOneShot(AudioPlayArea.Combo3);
                 break;
         }
+    }
+    public void PlayFlyOverSound()
+    {
+        AudioManager.PlayOneShot(AudioPlayArea.FlyOver);
+    }
+    public void PlayRV(System.Action callback, int clickTime, string des, System.Action failCallback = null)
+    {
+        Ads._instance.ShowRewardVideo(callback, clickTime, des,failCallback);
+    }
+    public void PlayIV(string des,System.Action callback = null)
+    {
+        Ads._instance.ShowInterstialAd(callback, des);
+    }
+
+    public void SendAdjustGameStartEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_open,
+            ("install_version", "1")
+            );
+    }
+    public void SendAdjustPlayAdEvent(bool hasAd, bool isRewardAd, string adByWay)
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(hasAd ? AdjustEventLogger.TOKEN_ad : AdjustEventLogger.TOKEN_noads,
+            //广告位置
+            ("id", adByWay),
+            //广告类型，0插屏1奖励视频
+            ("type", isRewardAd ? "1" : "0"),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustPerTenBallEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_stage_end,
+            ("id", (PlayerDataManager.playerData.logPerTenBall / 10).ToString()),
+            ("reason", MainController.Instance.BallMaxNum.ToString()),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustGameOverEvent(bool passive)
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_stage_over,
+            ("id", PlayerDataManager.playerData.logRestartTime.ToString()),
+            ("next_stage_id", PlayerDataManager.GetLevel().ToString()),
+            ("result", passive ? "0" : "1"),
+            ("reason", PlayerDataManager.GetLevelTargetBallNum().ToString()),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustPropChangeEvent(int propID, int propChangeType)
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        string value;
+        if (propChangeType == 0)
+            value = "-1";
+        else
+            value = "+1";
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_item_change,
+            ("id", propID.ToString()),
+            ("type", propChangeType.ToString()),
+            ("stage_id", PlayerDataManager.GetLevelTargetBallNum().ToString()),
+            ("value", value),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendFBAttributeEvent(string uri)
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_deeplink,
+            ("link", uri),
+            ("order_id", uri),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustChangePackBEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_packb,
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustSpawnGiftballEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_box,
+            ("id", PlayerDataManager.playerData.logGiftBallAppearTime.ToString()),
+            ("time", PlayerDataManager.playerData.logOpenGiftBallTime.ToString()),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustSpinWheelEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_wheel,
+            ("id", PlayerDataManager.playerData.logSpinWheelTime.ToString()),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
+    }
+    public void SendAdjustSpinSlotsEvent()
+    {
+#if UNITY_EDITOR
+        return;
+#endif
+        AdjustEventLogger.Instance.AdjustEvent(AdjustEventLogger.TOKEN_slots,
+            ("id", PlayerDataManager.playerData.logSpinSlotsTime.ToString()),
+            //累计美元
+            ("other_int1", GetCash().ToString()),
+            //当前金币
+            ("other_int2", GetCoin().ToString())
+            );
     }
 }
 public enum Reward
