@@ -13,6 +13,7 @@ namespace UI
         }
         protected override IEnumerator Show()
         {
+            _CanvasGroup.blocksRaycasts = true;
             Transform content = transform.GetChild(1);
             AnimationCurve scaleCurve = GameManager.PopPanelScaleAnimation;
             AnimationCurve alphaCurve = GameManager.PopPanelAlphaAnimation;
@@ -31,7 +32,6 @@ namespace UI
                 yield return null;
             }
             _CanvasGroup.interactable = true;
-            _CanvasGroup.blocksRaycasts = true;
         }
         protected override IEnumerator Close()
         {

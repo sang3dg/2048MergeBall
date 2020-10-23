@@ -336,7 +336,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c3302cb45e152243a3a24cee90ae18c, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -567,6 +567,8 @@ MonoBehaviour:
   remainingTimes: {fileID: 4005410471021520152}
   adicon: {fileID: 6901027128162999563}
   getContentRect: {fileID: 1434426546415022838}
+  cashIcon: {fileID: 7006040900325497219}
+  reedemTip: {fileID: 7425131703577618177}
 --- !u!1 &1970340913563595326
 GameObject:
   m_ObjectHideFlags: 0

@@ -125,7 +125,8 @@ public class UI_SlotsPanel : UI_PopPanelBase
     }
     static Vector2 noadSpincontentPos = new Vector2(0, 2.4f);
     static Vector2 adSpincontentPos = new Vector2(47.5f, 2.4f);
-    bool needAd = true;
+    bool needAd = false;
+    Coroutine closeDelay = null;
     protected override void OnStartShow()
     {
         base.OnStartShow();
@@ -142,6 +143,11 @@ public class UI_SlotsPanel : UI_PopPanelBase
             adIcon.SetActive(true);
             spinContentRect.localPosition = adSpincontentPos;
         }
+        closeDelay= StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(closeButton.gameObject));
+    }
+    protected override void OnEndClose()
+    {
+        StopCoroutine(closeDelay);
     }
     private void ResetSlotsReward()
     {

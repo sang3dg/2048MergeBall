@@ -44,6 +44,28 @@ public class Ball : MonoBehaviour
         else
             text_num.gameObject.SetActive(false);
     }
+    public void InitTargetBall(int num)
+    {
+        Num = num;
+        BallBaseData config = ConfigManager.GetBallBaseConfig(num);
+        BallBaseData config128= ConfigManager.GetBallBaseConfig(128);
+        MainController.Instance.RefreshCurrentBallMaxNum();
+        img_icon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.Ball, config.BallSpriteName.ToString());
+        rect_self.localScale = new Vector3(config128.BallSize, config128.BallSize);
+        if (num > 0)
+        {
+            string numStr = ToolManager.GetBallNumShowString(num);
+            text_num.text = numStr;
+            float text_width = numStr.Length * 100;
+            rect_text.sizeDelta = new Vector2(text_width, GameManager.ballTextHeight);
+            float text_scale = GameManager.ballCircle / (text_width + 50);
+            rect_text.localScale = new Vector3(text_scale, text_scale);
+            if (!text_num.gameObject.activeSelf)
+                text_num.gameObject.SetActive(true);
+        }
+        else
+            text_num.gameObject.SetActive(false);
+    }
     public void MergeSelfNum()
     {
         InitBall(Num + Num);
@@ -82,6 +104,7 @@ public class Ball : MonoBehaviour
                 switch (Num)
                 {
                     case -1:
+                        if (otherBall.Num == -2) return;
                         otherBall.MergeSelfNum();
                         willBeDestory = true;
                         Destroy(gameObject);

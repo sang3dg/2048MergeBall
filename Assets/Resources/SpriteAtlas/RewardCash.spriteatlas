@@ -31,7 +31,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 34923c79975a5a4459b8ff48d7087d60, type: 3}
-    totalSpriteSurfaceArea: 1788687
+    totalSpriteSurfaceArea: 2425167
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -40,6 +40,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1e12d085378899b41ad2816c06154b73, type: 3}
   - {fileID: 21300000, guid: 2d31de58b11827a43979fac94702b306, type: 3}
   - {fileID: 21300000, guid: 7af5e2c9326ef7e45b6c2d4eb5652556, type: 3}
+  - {fileID: 21300000, guid: f8fdbd1b5aba50f4ebe39eda59e6543f, type: 3}
   - {fileID: 21300000, guid: 0c3302cb45e152243a3a24cee90ae18c, type: 3}
   - {fileID: 21300000, guid: 0762dd8d4d6353f4988976163caef846, type: 3}
   - {fileID: 21300000, guid: 04db504f64a302041a78ba90c55377dd, type: 3}
@@ -49,7 +50,8 @@ SpriteAtlas:
   - Saveinwallet
   - ad
   - button
-  - manycash
+  - manycashA
+  - manycashB
   - youget
   - light
   m_Tag: RewardCash

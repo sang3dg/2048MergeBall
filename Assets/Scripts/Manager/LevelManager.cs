@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
     }
     public void SetTargetBallNum(int num)
     {
-        targetBall_B.InitBall(num);
-        targetBall_A.InitBall(num);
+        targetBall_B.InitTargetBall(num);
+        targetBall_A.InitTargetBall(num);
     }
 }

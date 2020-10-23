@@ -12,6 +12,7 @@ public class AnimationAutoEnd : MonoBehaviour
     }
     public void StopAnimator()
     {
+        MainController.Instance.SetCurrentBallState(true);
         self.SetBool("LevelUp", false);
         IsAnimation = false;
         GameManager.Instance.WhenLevelUpAnimationEnd();

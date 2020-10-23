@@ -82,19 +82,19 @@ public class Ads : MonoBehaviour
 			return;
 		}
 #endif
-		if (Time.realtimeSinceStartup - interstialLasttime < 30)
+		if (timer - interstialLasttime < 60)
         {
-			callback();
+			callback?.Invoke();
 			return;
         }
 		if (IronSource.Agent.isInterstitialReady())
 		{
-			interstialLasttime = Time.realtimeSinceStartup;
+			interstialLasttime = timer;
 			IronSource.Agent.showInterstitial();
 		}
 		else
 		{
-			callback();
+			callback?.Invoke();
 			GameManager.Instance.SendAdjustPlayAdEvent(false, false, adDes);
 		}
 	}
@@ -143,14 +143,25 @@ public class Ads : MonoBehaviour
 	{
 		if (canGetReward)
 		{
-			rewardCallback();
+			rewardCallback?.Invoke();
 			canGetReward = false;
 		}
 	}
 	Action popCallback;
 	public void InvokePopAd()
     {
-		popCallback();
+		popCallback?.Invoke();
+    }
+	float timer = 0;
+	bool isOut = false;
+    private void Update()
+    {
+		if (!isOut)
+			timer += Time.deltaTime;
+    }
+    private void OnApplicationFocus(bool focus)
+    {
+		isOut = !focus;
     }
 }
        

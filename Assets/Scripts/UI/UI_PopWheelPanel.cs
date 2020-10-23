@@ -49,6 +49,8 @@ namespace UI
             PanelType = UI_Panel.UI_PopPanel.WheelPanel;
             spinButton.onClick.AddListener(OnSpinClick);
             closeButton.onClick.AddListener(OnCloseClick);
+            var menu = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
+            menu.rewardTargetTransform.Add(Reward.WheelTicket, ticketNumText.transform.parent);
         }
         int endIndex = -1;
         bool isSpining = false;
@@ -143,17 +145,18 @@ namespace UI
         {
             ticketNumText.text = "x" + GameManager.GetWheelTicket();
         }
+        Coroutine closeDelay = null;
         protected override void OnStartShow()
         {
             clickAdTime = 0;
             CheckHasFree();
             wheelRect.rotation = Quaternion.identity;
             RefreshTicketShowText();
+            closeDelay= StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(closeButton.gameObject));
         }
-        protected override void OnEndShow()
+        protected override void OnEndClose()
         {
-            var menu = UIManager.GetUIPanel(UI_Panel.MenuPanel) as UI_MenuPanel;
-            menu.rewardTargetTransform.Add(Reward.WheelTicket,ticketNumText.transform.parent);
+            StopCoroutine(closeDelay);
         }
     }
 }

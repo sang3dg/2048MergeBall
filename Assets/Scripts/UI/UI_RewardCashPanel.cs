@@ -13,6 +13,8 @@ namespace UI
         public Text remainingTimes;
         public GameObject adicon;
         public RectTransform getContentRect;
+        public Image cashIcon;
+        public GameObject reedemTip;
         protected override void Awake()
         {
             base.Awake();
@@ -47,6 +49,7 @@ namespace UI
         }
         int rewardNum = 0;
         bool needAd = true;
+        Coroutine closeDelay = null;
         protected override void OnStartShow()
         {
             clickAdTime = 0;
@@ -55,16 +58,25 @@ namespace UI
                 Debug.LogError("奖励类型错误");
                 return;
             }
+            bool isPackB = GameManager.GetIsPackB();
+            cashIcon.sprite = SpriteManager.Instance.GetSprite(SpriteAtlas_Name.RewardCash, "manycash" + (isPackB ? "B" : "A"));
             needAd = GameManager.ConfirmReward_Needad;
             rewardNum = GameManager.ConfirmRewrad_Num;
-            rewardNumText.text = "$" + ToolManager.GetCashShowString(rewardNum);
+            rewardNumText.text = (isPackB ? "$" : "") + ToolManager.GetCashShowString(rewardNum);
+            reedemTip.SetActive(isPackB);
             remainingTimes.text = "Remaining:" + GameManager.ReduceTodayCanGetCashTime();
             closeButton.gameObject.SetActive(needAd);
             adicon.SetActive(needAd);
             getContentRect.localPosition = needAd ? new Vector3(54.5f, 6, 0) : new Vector3(0, 6, 0);
+            if (needAd)
+            {
+                closeDelay= StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(closeButton.gameObject));
+            }
         }
         protected override void OnEndClose()
         {
+            if (needAd)
+                StopCoroutine(closeDelay);
             if (GameManager.WillShowGift > 0)
             {
                 GameManager.WillShowGift--;

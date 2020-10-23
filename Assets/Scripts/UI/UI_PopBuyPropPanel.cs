@@ -75,6 +75,7 @@ namespace UI
         }
         bool isProp1 = false;
         int needCoinNum = 0;
+        Coroutine closeDelay = null;
         protected override void OnStartShow()
         {
             clickAdTime = 0;
@@ -83,6 +84,11 @@ namespace UI
             icon.sprite = isProp1 ? prop1icon : prop2icon;
             coinBuyButton.gameObject.SetActive(false);
             adBuyButton.gameObject.SetActive(true);
+            closeDelay = StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(closeButton.gameObject));
+        }
+        protected override void OnEndClose()
+        {
+            StopCoroutine(closeDelay);
         }
         protected override void OnEndShow()
         {

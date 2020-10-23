@@ -44,7 +44,6 @@ namespace UI
             StopCoroutine("WaitFor");
             UIManager.ClosePopPanelByID(UI_ID);
             UIManager.ReleasePanel(this);
-            UIManager.ShowPopPanelByType(UI_Panel.MenuPanel);
             GameManager.Instance.WhenLoadingGameEnd();
         }
         IEnumerator WaitFor()
@@ -63,7 +62,7 @@ namespace UI
             {
                 if (webRequest.downloadHandler.text.Equals("{\"store_review\": true}"))
                 {
-                    if (GameManager.isLoadingEnd)
+                    if (!GameManager.isLoadingEnd)
                         GameManager.SetIsPackB();
                 }
             }

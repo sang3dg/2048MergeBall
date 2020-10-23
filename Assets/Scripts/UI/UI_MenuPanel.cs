@@ -15,6 +15,7 @@ namespace UI
         public Button wheelButton;
         public Button propButton1;
         public Button propButton2;
+
         public Text cashText;
         public Text coinText;
         public Text scoreText;
@@ -25,6 +26,7 @@ namespace UI
         public Text prop2NumText;
         public Text prop1NeedNumText;
         public Text prop2NeedNumText;
+
         public Image prop1NeedIcon;
         public Image prop2NeedIcon;
         public Image stageProgressFillImage;
@@ -45,6 +47,7 @@ namespace UI
             wheelButton.onClick.AddListener(OnWheelButtonClick);
             propButton1.onClick.AddListener(OnProp1ButtonClick);
             propButton2.onClick.AddListener(OnProp2ButtonClick);
+
             guideMaskButton.onClick.AddListener(OnGuideBGClick);
             currentProgress = Mathf.Floor(GameManager.CurrentLevelProgress);
             stageProgressFillImage.fillAmount = FillStart;
@@ -66,28 +69,40 @@ namespace UI
         private void OnSettingButtonClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.SettingPanel);
         }
         private void OnCashButtonClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
             if (isWaitingGuide)
                 return;
             if (isGuiding)
                 OnGuideBGClick();
+            else
+            {
+                if (GameManager.GetIsPackB())
+                    Application.OpenURL("http://cashout.vip/redeem_dollar/index.html?balance=" + ToolManager.GetCashShowString(GameManager.GetCash()));
+            }
         }
         private void OnCoinButtonClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
+            if (GameManager.GetIsPackB())
+                Application.OpenURL("http://cashout.vip/redeem_dollar/index.html?balance=" + ToolManager.GetCashShowString(GameManager.GetCash()));
         }
         private void OnWheelButtonClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.WheelPanel);
         }
         private void OnProp1ButtonClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
             if (hasProp1)
             {
                 GameManager.AddProp1Num(-1);
@@ -115,10 +130,11 @@ namespace UI
         }
         private void OnProp2ButtonClick()
         {
+            if (AnimationAutoEnd.IsAnimation) return;
             GameManager.PlayButtonClickSound();
             if (hasProp2)
             {
-                if(GameManager.UseProp2())
+                if (GameManager.UseProp2())
                     GameManager.AddProp2Num(-1);
             }
             else
@@ -268,11 +284,13 @@ namespace UI
             RefreshCashText();
             RefreshCoinText();
             RefreshScoreText();
+            MainController.Instance.RefreshEnergyText();
             RefreshBestScoreText();
             RefreshProp1();
             RefreshProp2();
             SetStageInfo();
             StartCoroutine("StageProgressAnimation");
+            StartCoroutine("AutoRotateWheelIcon");
             yield return null;
         }
         protected override IEnumerator Close()
@@ -351,6 +369,9 @@ namespace UI
                             case Reward.Coin:
                                 RefreshCoinText();
                                 break;
+                            case Reward.Energy:
+                                MainController.Instance.RefreshEnergyText();
+                                break;
                         }
                     }
                 }
@@ -377,6 +398,22 @@ namespace UI
             rewardTargetTransform.Add(Reward.Prop2, propButton2.transform);
             rewardTargetTransform.Add(Reward.Cash, cashButton.transform);
             rewardTargetTransform.Add(Reward.Coin, coinButton.transform);
+            rewardTargetTransform.Add(Reward.Energy, MainController.Instance.energyText.transform);
+            if (!GameManager.CheckWhetherGuideHowtoplay())
+            {
+                MainController.Instance.SetCurrentBallState(false);
+                UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GuidePanel);
+                GameManager.SetHasGuideHowtoplay();
+            }
+        }
+        IEnumerator AutoRotateWheelIcon()
+        {
+            Transform wheelIcon = wheelButton.transform;
+            while (true)
+            {
+                yield return null;
+                wheelIcon.Rotate(new Vector3(0, 0, -Time.deltaTime * 150));
+            }
         }
     }
 }

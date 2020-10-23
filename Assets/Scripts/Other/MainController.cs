@@ -11,17 +11,20 @@ public class MainController : MonoBehaviour
     public static MainController Instance;
     public GameObject prefab_ball;
     public float f_ballStartSpeed = 5;
-    public RectTransform rect_ballStartPos;
     public RectTransform rect_ballPool;
-    public RectTransform rect_grid;
     public RectTransform rect_leftBorder;
     public RectTransform rect_rightBorder;
     public RectTransform rect_line;
     public List<FailArea> FailAreas = new List<FailArea>();
     public bool AutoFire = true;
-
+    [Space(15)]
+    public GameObject prefab_lighting;
+    [Space(15)]
     public RectTransform gamePanelRect;
     public RectTransform gamePanelTargetBallRect;
+    [Space(15)]
+    public Text energyText;
+    public Text energyTimedown;
     [NonSerialized]
     public int BallMaxNum;
     private GameObject go_currentBall;
@@ -32,6 +35,7 @@ public class MainController : MonoBehaviour
     }
     private void Start()
     {
+        StartCoroutine("NaturalIncreaseEnergy");
         SpawnNewBall();
     }
     public void SpawnNewBall()
@@ -93,12 +97,23 @@ public class MainController : MonoBehaviour
         rect_line.gameObject.SetActive(false);
         FireBall();
     }
+    public bool hasShowBuyEnergyPanel = false;
     void FireBall()
     {
         if (fail)
             return;
         if (go_currentBall is object)
         {
+            if (GameManager.Instance.GetCurrentEnergy() <= 0l)
+            {
+                if (!hasShowBuyEnergyPanel)
+                {
+                    hasShowBuyEnergyPanel = true;
+                    GameManager.Instance.UIManager.ShowPopPanelByType(UI.UI_Panel.UI_PopPanel.BuyEnergyPanel);
+                }
+                return;
+            }
+            GameManager.Instance.AddEnergy(-1);
             go_currentBall.GetComponent<Rigidbody2D>().isKinematic = false;
             go_currentBall.GetComponent<CircleCollider2D>().isTrigger = false;
             go_currentBall.GetComponent<Rigidbody2D>().velocity = new Vector3(0, -f_ballStartSpeed, 0);
@@ -109,6 +124,7 @@ public class MainController : MonoBehaviour
     {
         return ConfigManager.GetBallBaseConfig(num).BallSize * GameManager.ballCircle * 0.5f;
     }
+    Coroutine stageUp = null;
     public void RefreshCurrentBallMaxNum()
     {
         List<Ball> balls = GetInOrderBallList();
@@ -118,10 +134,11 @@ public class MainController : MonoBehaviour
             BallMaxNum = 0;
         if (BallMaxNum >= GameManager.Instance.GetTargetLevelBallNum())
         {
+            if (stageUp != null) return;
             SaveData();
             if (balls.Count > 0)
             {
-                StartCoroutine(MoveToTargetBall(balls[balls.Count - 1].transform));
+               stageUp= StartCoroutine(MoveToTargetBall(balls[balls.Count - 1].transform));
             }
         }
     }
@@ -144,6 +161,7 @@ public class MainController : MonoBehaviour
         gamePanelTargetBallRect.GetComponent<Ball>().PlayMergeEffect();
         yield return new WaitForSeconds(0.5f);
         GameManager.Instance.LevelUp();
+        stageUp = null;
     }
     bool fail = false;
     public bool CheckFail(bool delay = true)
@@ -300,20 +318,22 @@ public class MainController : MonoBehaviour
         go_currentBall.transform.localPosition = new Vector3(0, -halfCircle);
         go_currentBall.GetComponent<Ball>().InitBall(Prop1NumIndex);
         rect_line.localPosition = new Vector3(0, -2 * halfCircle);
+        GameManager.Instance.ShowUsePropGiftPanel();
     }
     public bool UseProp2()
     {
         List<Ball> ballList = GetInOrderBallList();
         int count = ballList.Count;
         int hasMergeCount = 0;
+        List<Ball> willDestoryBalls = new List<Ball>();
+        List<Ball> willMergeSelfBalls = new List<Ball>();
+
         Ball currentMergeBall = null;
         for(int i = 0; i < count; i++)
         {
             Ball thisBall = ballList[i];
             if (currentMergeBall is null|| thisBall.Num != currentMergeBall.Num)
-            {
                 currentMergeBall = thisBall;
-            }
             else
             {
                 Vector2 mergeBall1Pos = currentMergeBall.transform.localPosition;
@@ -323,18 +343,113 @@ public class MainController : MonoBehaviour
                     destory1 = true;
                 else if(mergeBall1Pos.x<=mergeBall2Pos.x)
                     destory1 = true;
-                Destroy(destory1 ? currentMergeBall.gameObject : thisBall.gameObject);
                 if (destory1)
-                    thisBall.MergeSelfNum();
+                {
+                    willDestoryBalls.Add(currentMergeBall);
+                    willMergeSelfBalls.Add(thisBall);
+                }
                 else
-                    currentMergeBall.MergeSelfNum();
+                {
+                    willDestoryBalls.Add(thisBall);
+                    willMergeSelfBalls.Add(currentMergeBall);
+                }
                 currentMergeBall = null;
                 hasMergeCount++;
                 if (hasMergeCount >= 3)
                     break;
             }
         }
+        if (hasMergeCount > 0)
+            StartCoroutine(Prop2Animation(willDestoryBalls, willMergeSelfBalls));
         return hasMergeCount != 0;
+    }
+    private List<GameObject> allLighting = new List<GameObject>();
+    [Space(10)]
+    public GameObject prop2;
+    private IEnumerator Prop2Animation(List<Ball> willDestoryBall, List<Ball> willMergeSelfBall)
+    {
+        AnimationAutoEnd.IsAnimation = true;
+        rect_line.gameObject.SetActive(false);
+        go_currentBall.SetActive(false);
+        prop2.SetActive(true);
+        yield return new WaitForSeconds(1);
+        float speed = 3000;
+        int allLightingCount = willDestoryBall.Count + willMergeSelfBall.Count;
+        while(allLighting.Count< allLightingCount)
+        {
+            GameObject oneLighting = Instantiate(prefab_lighting, rect_ballPool);
+            oneLighting.SetActive(false);
+            allLighting.Add(oneLighting);
+        }
+        while (allLighting.Count > allLightingCount)
+        {
+            Destroy(allLighting[allLighting.Count - 1]);
+            allLighting.RemoveAt(allLighting.Count - 1);
+        }
+        yield return null;
+        for(int i = 0; i < allLightingCount; i++)
+        {
+            GameObject one = allLighting[i];
+            one.transform.localPosition = go_currentBall.transform.localPosition;
+            one.GetComponent<TrailRenderer>().Clear();
+            one.SetActive(true);
+        }
+        Vector3 startPos = go_currentBall.transform.localPosition;
+        List<Vector3> targetPos = new List<Vector3>();
+        List<Vector3> targetDir = new List<Vector3>();
+        foreach(var ball in willDestoryBall)
+        {
+            targetPos.Add(ball.transform.localPosition);
+        }
+        foreach(var ball in willMergeSelfBall)
+        {
+            targetPos.Add(ball.transform.localPosition);
+        }
+
+        if (allLighting.Count != targetPos.Count)
+        {
+            Debug.LogError("闪电个数与球的个数不匹配");
+            yield break;
+        }
+        for(int i = 0; i < allLightingCount; i++)
+        {
+            targetDir.Add((targetPos[i] - startPos).normalized);
+        }
+
+        int movingCount = allLightingCount;
+        float Y = startPos.y;
+        while (movingCount >0)
+        {
+            yield return null;
+            Y -= Time.deltaTime * speed;
+            movingCount = 0;
+            for(int i = 0; i < allLightingCount; i++)
+            {
+                Vector3 target = targetPos[i];
+                if (Y < target.y)
+                    continue;
+                else
+                {
+                    movingCount++;
+                    allLighting[i].transform.localPosition = new Vector3(Y / targetDir[i].y * targetDir[i].x, Y);
+                }
+            }
+        }
+        yield return new WaitForSeconds(0.3f);
+        AnimationAutoEnd.IsAnimation = false;
+        foreach(var ball in willDestoryBall)
+        {
+            Destroy(ball.gameObject);
+        }
+        foreach(var ball in willMergeSelfBall)
+        {
+            ball.MergeSelfNum();
+        }
+        yield return new WaitForSeconds(0.3f);
+        go_currentBall.SetActive(true);
+        rect_line.gameObject.SetActive(true);
+        prop2.SetActive(false);
+        GameManager.Instance.ShowUsePropGiftPanel();
     }
     public void SpawnNewGiftBall()
     {
@@ -348,5 +463,34 @@ public class MainController : MonoBehaviour
         newBall.transform.localPosition = new Vector2(x, -offset * 2);
         GameManager.Instance.AddGiftBallAppearTime();
         GameManager.Instance.SendAdjustSpawnGiftballEvent();
+    }
+    public void SetCurrentBallState(bool show)
+    {
+        go_currentBall.SetActive(show);
+        rect_line.gameObject.SetActive(show);
+    }
+    public void RefreshEnergyText()
+    {
+        energyText.text = GameManager.Instance.GetCurrentEnergy().ToString();
+    }
+    IEnumerator NaturalIncreaseEnergy()
+    {
+        int timer = 60;
+        energyTimedown.text = "1:00";
+        WaitForSeconds oneMinutes = new WaitForSeconds(1);
+        while (true)
+        {
+            yield return oneMinutes;
+            timer--;
+            if (GameManager.Instance.GetCurrentEnergy() < GameManager.maxEnergy)
+                energyTimedown.text = "0:" + (timer > 9 ? timer.ToString() : "0" + timer);
+            else
+                energyTimedown.text = "1:00";
+            if (timer <= 0)
+            {
+                timer = 60;
+                GameManager.Instance.AddEnergy(1);
+            }
+        }
     }
 }

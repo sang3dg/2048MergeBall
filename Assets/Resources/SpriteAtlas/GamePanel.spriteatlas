@@ -31,11 +31,15 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 8cfc020b548508f40b72ba84ab0cbb93, type: 3}
-    totalSpriteSurfaceArea: 3437010
+    totalSpriteSurfaceArea: 3633226
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 1256851086769c7479befbfda8640c1f, type: 3}
+  - {fileID: 21300000, guid: e06c94d0900601044857a2bdae73e678, type: 3}
+  - {fileID: 21300000, guid: 0c135cd077627de41a09a30c46ea02b5, type: 3}
+  - {fileID: 21300000, guid: f0b4a923dd8c60f4bbdb76ab795df8da, type: 3}
+  - {fileID: 21300000, guid: 8f428383c169e464d82c9dc42fd96d49, type: 3}
   - {fileID: 21300000, guid: 5b761ad3cb13eab4a9d600bc6c87f0c5, type: 3}
   - {fileID: 21300000, guid: ce1b8eb428aeb9c4c9c3ca3b3b9f0e49, type: 3}
   - {fileID: 21300000, guid: 49ed4f1500ed382479a5f5f9c3179496, type: 3}
@@ -46,8 +50,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 190d820d725bae640bda8e4d829e8398, type: 3}
   - {fileID: 21300000, guid: 40bb0e1dcd0cef5428db32dfa53487a1, type: 3}
   - {fileID: 21300000, guid: 9c1d2f3dd0a708849b2a4cb07755f37f, type: 3}
+  - {fileID: 21300000, guid: 781c41fd77e9cdd4e8a6eb6d3c34c3a4, type: 3}
+  - {fileID: 21300000, guid: 83c92daff70a689479bec3f604ebf9ac, type: 3}
   m_PackedSpriteNamesToIndex:
   - lock_L
+  - Magnetite
+  - ball
+  - energy
+  - energybg
   - base
   - 8
   - BG
@@ -58,5 +68,7 @@ SpriteAtlas:
   - 6
   - lock
   - 10
+  - circle
+  - hand
   m_Tag: GamePanel
   m_IsVariant: 0

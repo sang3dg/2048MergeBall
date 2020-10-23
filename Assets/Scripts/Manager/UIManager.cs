@@ -21,6 +21,8 @@ namespace UI
             { UI_Panel.UI_PopPanel.BuyPropPanel , "Pop BuyProp Panel" },
             { UI_Panel.UI_PopPanel.GameOverPanel , "Pop GameOver Panel" },
             { UI_Panel.UI_PopPanel.RateusPanel , "Pop Rateus Panel" },
+            { UI_Panel.UI_PopPanel.BuyEnergyPanel , "Pop BuyEnergy Panel" },
+            { UI_Panel.UI_PopPanel.GuidePanel , "Guide Panel" },
             {UI_Panel.MenuPanel,"Menu Panel" },
         };
         static readonly Dictionary<int, GameObject> UI_Type_Prefab_Dic = new Dictionary<int, GameObject>();
@@ -164,7 +166,8 @@ namespace UI
                                 {
                                     UI_Type_Prefab_Dic.Add(panelType, prefab);
                                     UI_PanelBase panel = Instantiate(UI_Type_Prefab_Dic[panelType], popRoot).GetComponent<UI_PanelBase>();
-                                    if (panel is UI_MenuPanel)
+                                    if (panel is UI_PopPanelBase) { }
+                                    else
                                         panel.transform.SetParent(menuRoot);
                                     panel.transform.SetAsLastSibling();
                                     yield return panel.ShowThisPanel();
@@ -366,7 +369,9 @@ namespace UI
             public const int BuyPropPanel = 8;
             public const int GameOverPanel = 9;
             public const int RateusPanel = 10;
-            public const int PopPanelNum = 10;
+            public const int BuyEnergyPanel = 11;
+            public const int GuidePanel = 12;
+            public const int PopPanelNum = 12;
         }
     }
 }

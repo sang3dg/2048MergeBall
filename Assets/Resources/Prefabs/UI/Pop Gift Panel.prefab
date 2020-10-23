@@ -908,4 +908,5 @@ MonoBehaviour:
   nothanksButton: {fileID: 4785079617064728950}
   closeButton: {fileID: 4617033458563814065}
   adIcon: {fileID: 7026303068179946019}
+  redeemTip: {fileID: 7384498974833793000}
   openContentRect: {fileID: 30072225418367668}

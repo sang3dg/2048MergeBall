@@ -22,6 +22,7 @@ public class SpriteManager
         { SpriteAtlas_Name.Menu,"SpriteAtlas/Menu"},
         { SpriteAtlas_Name.BuyProp,"SpriteAtlas/BuyProp"},
         { SpriteAtlas_Name.Fly,"SpriteAtlas/Fly"},
+        { SpriteAtlas_Name.RewardCash,"SpriteAtlas/RewardCash"},
     };
     readonly Dictionary<SpriteAtlas_Name, SpriteAtlas> loadedSpriteAtlasDic = new Dictionary<SpriteAtlas_Name, SpriteAtlas>();
     readonly Dictionary<string, Sprite> loadedSpriteDic = new Dictionary<string, Sprite>();
@@ -114,4 +115,5 @@ public enum SpriteAtlas_Name
     Menu,
     BuyProp,
     Fly,
+    RewardCash,
 }

@@ -60,4 +60,10 @@ public class ToolManager
                 return "E+" + numDevideThree * 3;
         }
     }
+    public static IEnumerator DelaySecondShowNothanksOrClose(GameObject nothanks,float second = 1)
+    {
+        nothanks.gameObject.SetActive(false);
+        yield return new WaitForSeconds(second);
+        nothanks.gameObject.SetActive(true);
+    }
 }

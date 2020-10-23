@@ -17,6 +17,11 @@ public class GameManager : MonoBehaviour
     public const int propNeedCoinNumIncreaseStep = 50;
     public const int propNeedMaxCoinNum = 1000;
     public const int levelStartTargetBallNum = 128;
+    public const int originEnergy = 100;
+    public const int maxEnergy = 100;
+    public const int addEnergyPerAd = 50;
+    public const int buyEnergyMaxTimePerDay = 20;
+
     public static bool isLoadingEnd = false;
     public AnimationCurve PopPanelScaleAnimation;
     public AnimationCurve PopPanelAlphaAnimation;
@@ -173,10 +178,12 @@ public class GameManager : MonoBehaviour
     {
         return PlayerDataManager.GetLevelTargetBallNum();
     }
-    public void LevelUp()
+    public void LevelUp(bool isGuide=false)
     {
+        MainController.Instance.SetCurrentBallState(false);
         LevelManager.WhenLevelUp();
-        PlayerDataManager.AddLevelTargetBallNum();
+        if (!isGuide)
+            PlayerDataManager.AddLevelTargetBallNum();
     }
     public void RefreshTargetBallNum()
     {
@@ -271,19 +278,16 @@ public class GameManager : MonoBehaviour
     public bool isPropGift = false;
     public void UseProp1()
     {
-        StartCoroutine(DelayShowUsePropGiftPanel());
         SendAdjustPropChangeEvent(1, 0);
         MainController.Instance.UseProp1();
     }
     public bool UseProp2()
     {
-        StartCoroutine(DelayShowUsePropGiftPanel());
         SendAdjustPropChangeEvent(2, 0);
         return MainController.Instance.UseProp2();
     }
-    private IEnumerator DelayShowUsePropGiftPanel()
+    public void ShowUsePropGiftPanel()
     {
-        yield return new WaitForSeconds(0.5f);
         isPropGift = true;
         if (!UIManager.PanelWhetherShowAnyone() && WillShowGift <= 0)
             UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
@@ -408,7 +412,7 @@ public class GameManager : MonoBehaviour
     }
     public Reward RandomGiftReward(out int rewardNum)
     {
-        bool isPackB = GetIsPackB();
+        bool isPackB = true;
         if (isPackB)
         {
             GiftDataB giftDataB = ConfigManager.GetGiftBData(GetCash());
@@ -470,8 +474,7 @@ public class GameManager : MonoBehaviour
     public void WhenLoadingGameEnd()
     {
         isLoadingEnd = true;
-        if (GetWhetherFirstPlay())
-            UIManager.ShowPopPanelByType(UI_Panel.UI_PopPanel.GiftPanel);
+        UIManager.ShowPopPanelByType(UI_Panel.MenuPanel);
         MainController.Instance.LoadSaveData();
         stopGuideGame = false;
         CheckGuideGameAndShow();
@@ -511,6 +514,37 @@ public class GameManager : MonoBehaviour
     {
         PlayerDataManager.playerData.hasGetFreeGift = true;
         PlayerDataManager.Save();
+    }
+    public int GetCurrentEnergy()
+    {
+        return PlayerDataManager.playerData.energy;
+    }
+    public int AddEnergy(int value)
+    {
+        if (value > 0)
+        {
+            if (PlayerDataManager.playerData.energy < maxEnergy)
+            {
+                PlayerDataManager.playerData.energy += value;
+                PlayerDataManager.playerData.energy = Mathf.Clamp(PlayerDataManager.playerData.energy, 0, maxEnergy);
+            }
+        }
+        else
+            PlayerDataManager.playerData.energy += value;
+        if (value == 1)
+            PlayerDataManager.playerData.lastGetNaturalEnergyTime = System.DateTime.Now.ToString();
+        PlayerDataManager.Save();
+        MainController.Instance.RefreshEnergyText();
+        return PlayerDataManager.playerData.energy;
+    }
+    public void AddBuyEnergyTime(int value = 1)
+    {
+        PlayerDataManager.playerData.todayBuyEnergyTime += value;
+        PlayerDataManager.Save();
+    }
+    public bool CheckHasBuyEnergyTime()
+    {
+        return PlayerDataManager.playerData.todayBuyEnergyTime < buyEnergyMaxTimePerDay;
     }
     public void AddGiftBallAppearTime(int num = 1)
     {
@@ -565,6 +599,15 @@ public class GameManager : MonoBehaviour
                 isRight = false;
         }
         hand.gameObject.SetActive(false);
+    }
+    public bool CheckWhetherGuideHowtoplay()
+    {
+        return PlayerDataManager.playerData.hasGuideHowtoplay;
+    }
+    public void SetHasGuideHowtoplay()
+    {
+        PlayerDataManager.playerData.hasGuideHowtoplay = true;
+        PlayerDataManager.Save();
     }
 
 
@@ -778,5 +821,6 @@ public enum Reward
     Cash,
     Coin,
     Amazon,
-    WheelTicket
+    WheelTicket,
+    Energy
 }

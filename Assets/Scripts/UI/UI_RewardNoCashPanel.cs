@@ -52,6 +52,7 @@ namespace UI
         Reward type = Reward.Null;
         int num = 0;
         bool needAd = true;
+        Coroutine nothanksDelay = null;
         protected override void OnStartShow()
         {
             clickAdTime = 0;
@@ -63,16 +64,20 @@ namespace UI
             adicon.SetActive(needAd);
             nothanksButton.gameObject.SetActive(needAd);
             adContentRect.localPosition = needAd ? new Vector3(49.3f, 5.7f, 0) : new Vector3(0, 5.7f, 0);
+            if(needAd)
+                nothanksDelay= StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(nothanksButton.gameObject));
         }
         private void GetReward()
         {
             switch (type)
             {
                 case Reward.Prop1:
-                    Debug.LogError("奖励类型错误，该面板不会奖励道具1");
+                    GameManager.AddProp1Num(num);
+                    UIManager.FlyReward(Reward.Prop1, num, transform.position);
                     break;
                 case Reward.Prop2:
-                    Debug.LogError("奖励类型错误，该面板不会奖励道具2");
+                    GameManager.AddProp2Num(num);
+                    UIManager.FlyReward(Reward.Prop2, num, transform.position);
                     break;
                 case Reward.Cash:
                     Debug.LogError("奖励类型错误，该面板不会奖励现金");
@@ -93,6 +98,8 @@ namespace UI
         }
         protected override void OnEndClose()
         {
+            if (needAd)
+                StopCoroutine(nothanksDelay);
             if (GameManager.WillShowGift > 0)
             {
                 GameManager.WillShowGift--;

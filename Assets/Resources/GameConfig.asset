@@ -291,7 +291,7 @@ MonoBehaviour:
     num: 1000
     weight: 10
     blackbox: ffffffff
-    limitCash: -1
+    limitCash: 3000
   - type: 6
     num: 2
     weight: 100
@@ -311,7 +311,7 @@ MonoBehaviour:
     num: 100
     weight: 100
     blackbox: 01000000040000000a000000
-    limitCash: 3000
+    limitCash: 9600
   - type: 1
     num: 2
     weight: 40

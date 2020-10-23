@@ -38,14 +38,21 @@ namespace UI
         private void OnRestartClick()
         {
             GameManager.PlayButtonClickSound();
+            if (AnimationAutoEnd.IsAnimation) return;
             GameManager.SendAdjustGameOverEvent(false);
             GameManager.RestartGame();
             UIManager.ClosePopPanel(this);
         }
+        Coroutine closeDelay = null;
         protected override void OnStartShow()
         {
             soundSwitch.IsOn = GameManager.GetSoundOn();
             musicSwitch.IsOn = GameManager.GetMusicOn();
+            closeDelay= StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(closeButton.gameObject));
+        }
+        protected override void OnEndClose()
+        {
+            StopCoroutine(closeDelay);
         }
     }
 }

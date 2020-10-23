@@ -19,6 +19,7 @@ public class PlayerDataManager
                     cash = 0,
                     coin = 0,
                     amazon = 0,
+                    energy = GameManager.originEnergy,
                     prop1Num = 0,
                     prop2Num = 0,
                     prop1NeedCoinNum = GameManager.originPropNeedCoinNum,
@@ -27,6 +28,8 @@ public class PlayerDataManager
                     todayCanGetCashTime = GameManager.canGetCashTimesPerDay,
                     lastGetCashTime = DateTime.Now.ToString(),
                     lastUseFreeWheelTime = DateTime.Now.AddDays(-1).ToString(),
+                    lastGetNaturalEnergyTime = DateTime.Now.ToString(),
+                    lastBuyEnergyTime = DateTime.Now.ToString(),
                     spinWheelTimeTotal = 0,
                     fallBallNum = 0,
                     score = 0,
@@ -44,6 +47,8 @@ public class PlayerDataManager
                     hasGuideGame = false,
                     musicOn = true,
                     soundOn = true,
+                    todayBuyEnergyTime = 0,
+                    hasGuideHowtoplay = false,
 
                     logPerTenBall = 0,
                     logRestartTime = 0,
@@ -56,6 +61,32 @@ public class PlayerDataManager
             }
             else
                 playerData = JsonUtility.FromJson<PlayerData>(dataStr);
+            DateTime now = DateTime.Now;
+            DateTime lastGetNaturalEnergyTime = DateTime.Parse(playerData.lastGetNaturalEnergyTime);
+            var interval = now - lastGetNaturalEnergyTime;
+            double addEnergy = interval.TotalMinutes;
+            if (playerData.energy < 50 && playerData.energy + addEnergy > 50)
+                playerData.energy = 50;
+            playerData.lastGetNaturalEnergyTime = now.ToString();
+
+            DateTime lastBuyEnergyTime = DateTime.Parse(playerData.lastBuyEnergyTime);
+            bool tomorrow = false;
+            if (now.Year == lastBuyEnergyTime.Year)
+            {
+                if (now.Month == lastBuyEnergyTime.Month)
+                {
+                    if (now.Day > lastBuyEnergyTime.Day)
+                        tomorrow = true;
+                }
+                else if (now.Month > lastBuyEnergyTime.Month)
+                    tomorrow = true;
+            }
+            else if (now.Year > lastBuyEnergyTime.Year)
+                tomorrow = true;
+            if (tomorrow)
+                playerData.todayBuyEnergyTime = 0;
+
+            Save();
         }
     }
     public bool GetIsPackB()
@@ -338,6 +369,7 @@ public class PlayerData
     public int cash;
     public int coin;
     public int amazon;
+    public int energy;
     public int prop1Num;
     public int prop2Num;
     public int prop1NeedCoinNum;
@@ -346,6 +378,8 @@ public class PlayerData
     public int todayCanGetCashTime;
     public string lastGetCashTime;
     public string lastUseFreeWheelTime;
+    public string lastGetNaturalEnergyTime;
+    public string lastBuyEnergyTime;
     public int spinWheelTimeTotal;
     public int fallBallNum;
     public int score;
@@ -363,6 +397,8 @@ public class PlayerData
     public bool hasGuideGame;
     public bool musicOn;
     public bool soundOn;
+    public int todayBuyEnergyTime;
+    public bool hasGuideHowtoplay;
 
     public int logPerTenBall;
     public int logRestartTime;

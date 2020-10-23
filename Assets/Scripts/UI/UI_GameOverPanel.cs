@@ -56,14 +56,19 @@ namespace UI
             GameManager.SendAdjustGameOverEvent(true);
             GameManager.RestartGame();
         }
+        Coroutine nothanksDelay = null;
         protected override void OnStartShow()
         {
             continueAll.alpha = 1;
             continueAll.blocksRaycasts = true;
             gameoverAll.alpha = 0;
             gameoverAll.blocksRaycasts = false;
-            nothanksButton.gameObject.SetActive(false);
             clickAdTime = 0;
+            nothanksDelay = StartCoroutine(ToolManager.DelaySecondShowNothanksOrClose(nothanksButton.gameObject));
+        }
+        protected override void OnEndClose()
+        {
+            StopCoroutine(nothanksDelay);
         }
         protected override void OnEndShow()
         {
@@ -74,13 +79,9 @@ namespace UI
             timeDown.fillAmount = 1;
             time.text = "5";
             float timer = 5;
-            float nothanksTime = 4;
             while (timer >= 0)
             {
                 timer -= Time.deltaTime;
-                if (timer <= nothanksTime)
-                    if (!nothanksButton.gameObject.activeSelf)
-                        nothanksButton.gameObject.SetActive(true);
                 timeDown.fillAmount = timer / 5;
                 time.text = Mathf.CeilToInt(timer).ToString();
                 yield return null;

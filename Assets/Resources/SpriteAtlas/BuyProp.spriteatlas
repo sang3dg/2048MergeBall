@@ -31,13 +31,15 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: a3309edf6c8a33a49a4e2bf119d952f3, type: 3}
-    totalSpriteSurfaceArea: 745950
+    totalSpriteSurfaceArea: 918251
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 76711020298f9104a848693e7c8d024b, type: 3}
+  - {fileID: 21300000, guid: cf8e0550319a6e64cbc5d7a90aa569cc, type: 3}
   - {fileID: 21300000, guid: eb77fe02e1b5b554b92f039849491bd5, type: 3}
   - {fileID: 21300000, guid: fdfc35821570a4f498a44cae4f669ff2, type: 3}
+  - {fileID: 21300000, guid: a8bef253470d9c84384673f8759ab560, type: 3}
   - {fileID: 21300000, guid: 19cf8d94905cf094daef0c594331b25e, type: 3}
   - {fileID: 21300000, guid: 909f7095a2bccba428e781685fdd5078, type: 3}
   - {fileID: 21300000, guid: 4c7295263d3c17c42bc8a647078510a3, type: 3}
@@ -45,11 +47,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 801038e9b4c4bde4d9cf93201f48699e, type: 3}
   - {fileID: 21300000, guid: 7c472eeb2da4e084d8fbfe070a7a62e2, type: 3}
   - {fileID: 21300000, guid: b19cd4dc35b63424db13437bea95f6cb, type: 3}
+  - {fileID: 21300000, guid: f99ebe3db920c354cb1f1bfd1914dd2f, type: 3}
   - {fileID: 21300000, guid: 8258487df26f521459e37ce8404a6a6c, type: 3}
   m_PackedSpriteNamesToIndex:
   - basein
+  - energyTitle
   - base
   - prop2
+  - energyGift
   - button
   - BUY
   - FREE
@@ -57,6 +62,7 @@ SpriteAtlas:
   - close
   - "\u7EC472"
   - ad
+  - energy
   - titlebg
   m_Tag: BuyProp
   m_IsVariant: 0

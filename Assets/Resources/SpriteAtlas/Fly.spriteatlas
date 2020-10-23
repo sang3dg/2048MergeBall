@@ -31,18 +31,20 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: f3183518646fd84469ca2db70b01cffc, type: 3}
-    totalSpriteSurfaceArea: 112500
+    totalSpriteSurfaceArea: 135000
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: cd0e56106d8a4dc468fadc81156a7f4d, type: 3}
   - {fileID: 21300000, guid: 27952d1056c284b4fa2185d77d13983d, type: 3}
+  - {fileID: 21300000, guid: d2e68091fbd904e49b78991cd1497a4c, type: 3}
   - {fileID: 21300000, guid: a4eed7b86198da947b9d4d187ae2c057, type: 3}
   - {fileID: 21300000, guid: 650691fa428535a4da28e6e7231096c2, type: 3}
   - {fileID: 21300000, guid: 9fab6b9bb7a483347bf89385d9ede3bb, type: 3}
   m_PackedSpriteNamesToIndex:
   - WheelTicket
   - Coin
+  - Energy
   - Prop2
   - Prop1
   - Cash
